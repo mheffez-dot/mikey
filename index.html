@@ -620,78 +620,82 @@
             });
         });
 
-        // Core Processing Logic
+        // Core Processing Logic - Optimized for speed with concurrent processing
         async function processVendors(data) {
             currentResults = [];
-            const total = data.filter(row => row['domain'] || row['Domain'] || row['website'] || row['Website']).length;
+            const validRows = data.filter(row => row['domain'] || row['Domain'] || row['website'] || row['Website']);
+            const total = validRows.length;
             let passCount = 0;
             let failCount = 0;
             let mixedCount = 0;
 
-            for (let i = 0; i < data.length; i++) {
-                const row = data[i];
-                const vendorName = row['Vendor Name'] || row['vendor_name'] || row['Name'] || row['vendor'] || row['domain'] || 'Unknown Vendor';
-                const websiteUrl = row['domain'] || row['Domain'] || row['website'] || row['Website'] || row['URL'] || row['url'] || '';
+            // Process in batches of 5 concurrent requests
+            const BATCH_SIZE = 5;
+            const results = [];
 
-                updateProgress(i + 1, total);
+            for (let i = 0; i < data.length; i += BATCH_SIZE) {
+                const batch = data.slice(i, Math.min(i + BATCH_SIZE, data.length));
+                updateProgress(Math.min(i + BATCH_SIZE, data.length), total);
 
-                if (!websiteUrl) {
-                    const result = {
-                        name: vendorName,
-                        url: 'N/A',
-                        status: 'fail',
-                        reason: 'No website provided',
-                        categories: []
-                    };
-                    currentResults.push(result);
-                    failCount++;
-                    continue;
-                }
+                const batchPromises = batch.map(async (row) => {
+                    const vendorName = row['Vendor Name'] || row['vendor_name'] || row['Name'] || row['vendor'] || row['domain'] || 'Unknown Vendor';
+                    const websiteUrl = row['domain'] || row['Domain'] || row['website'] || row['Website'] || row['URL'] || row['url'] || '';
 
-                // Normalize URL
-                let cleanUrl = websiteUrl.trim();
-                if (!cleanUrl.startsWith('http')) {
-                    cleanUrl = 'https://' + cleanUrl;
-                }
+                    if (!websiteUrl) {
+                        return {
+                            name: vendorName,
+                            url: 'N/A',
+                            status: 'fail',
+                            reason: 'No website provided',
+                            categories: []
+                        };
+                    }
 
-                try {
-                    // Fetch website content via CORS proxy
-                    const analysis = await analyzeWebsite(cleanUrl);
-                    
-                    const result = {
-                        name: vendorName,
-                        url: cleanUrl,
-                        status: analysis.status,
-                        reason: analysis.reason,
-                        categories: analysis.categories
-                    };
-                    
-                    currentResults.push(result);
-                    
-                    if (analysis.status === 'pass') passCount++;
-                    else if (analysis.status === 'fail') failCount++;
-                    else mixedCount++;
+                    // Normalize URL
+                    let cleanUrl = websiteUrl.trim();
+                    if (!cleanUrl.startsWith('http')) {
+                        cleanUrl = 'https://' + cleanUrl;
+                    }
 
-                } catch (error) {
-                    const result = {
-                        name: vendorName,
-                        url: cleanUrl,
-                        status: 'mixed',
-                        reason: `Could not verify: ${error.message}`,
-                        categories: ['unknown']
-                    };
-                    currentResults.push(result);
-                    mixedCount++;
-                }
+                    try {
+                        const analysis = await analyzeWebsite(cleanUrl);
+                        
+                        return {
+                            name: vendorName,
+                            url: cleanUrl,
+                            status: analysis.status,
+                            reason: analysis.reason,
+                            categories: analysis.categories
+                        };
+                        
+                    } catch (error) {
+                        return {
+                            name: vendorName,
+                            url: cleanUrl,
+                            status: 'mixed',
+                            reason: `Could not verify: ${error.message}`,
+                            categories: ['unknown']
+                        };
+                    }
+                });
 
-                // Small delay to be polite to servers
-                await new Promise(resolve => setTimeout(resolve, 500));
+                const batchResults = await Promise.all(batchPromises);
+                results.push(...batchResults);
             }
 
+            // Count results and update UI
+            currentResults = results;
+            results.forEach(result => {
+                if (result.status === 'pass') passCount++;
+                else if (result.status === 'fail') failCount++;
+                else mixedCount++;
+            });
+
+            updateProgress(total, total);
             showResults(passCount, failCount, mixedCount);
         }
 
-        // Website Analysis Function - Fetches and analyzes actual website content
+        // Website Analysis Function - Optimized for speed with focused content extraction
         async function analyzeWebsite(url) {
             try {
                 // Using AllOrigins proxy to bypass CORS restrictions
@@ -700,7 +704,8 @@
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
-                    }
+                    },
+                    signal: AbortSignal.timeout(5000) // 5 second timeout
                 });
                 
                 if (!response.ok) {
@@ -718,19 +723,18 @@
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
                 
-                // Extract text content from key areas for analysis
+                // Extract text content from key areas for analysis (optimized selection)
                 const title = doc.title || '';
                 const metaDescription = doc.querySelector('meta[name="description"]')?.content || '';
                 const metaKeywords = doc.querySelector('meta[name="keywords"]')?.content || '';
                 const h1 = doc.querySelector('h1')?.textContent || '';
                 
-                // Get navigation, main content, and footer text
-                const navText = Array.from(doc.querySelectorAll('nav, .nav, .navigation, header')).map(el => el.textContent).join(' ');
+                // Get navigation and main content only (skip footer for speed)
+                const navText = Array.from(doc.querySelectorAll('nav, .nav, .navigation')).map(el => el.textContent).join(' ');
                 const mainText = Array.from(doc.querySelectorAll('main, .main, #main, .content, article')).map(el => el.textContent).join(' ');
-                const footerText = Array.from(doc.querySelectorAll('footer, .footer')).map(el => el.textContent).join(' ');
-                const categoryLinks = Array.from(doc.querySelectorAll('a[href*="category"], a[href*="shop"], a[href*="product"], .menu-item, .nav-link')).map(el => el.textContent).join(' ');
+                const categoryLinks = Array.from(doc.querySelectorAll('a[href*="category"], a[href*="shop"], a[href*="product"], .menu-item')).slice(0, 20).map(el => el.textContent).join(' ');
                 
-                // Combine all text for analysis
+                // Combine all text for analysis (limited to first 10KB for speed)
                 const fullText = [
                     title,
                     metaDescription,
@@ -738,10 +742,8 @@
                     h1,
                     navText,
                     mainText,
-                    footerText,
-                    categoryLinks,
-                    html.toLowerCase()
-                ].join(' ').toLowerCase();
+                    categoryLinks
+                ].join(' ').toLowerCase().substring(0, 10000);
 
                 // Check for covered items (high-ticket durable goods)
                 const foundCovered = COVERED_CATEGORIES.filter(cat => {
@@ -819,6 +821,9 @@
                 }
 
             } catch (error) {
+                if (error.name === 'TimeoutError') {
+                    throw new Error('Request timed out (5s limit)');
+                }
                 throw error;
             }
         }
