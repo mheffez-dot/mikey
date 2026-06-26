@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "cps-validator",
+  "name": "mikey",
   "compatibility_date": "2026-06-26",
   "main": "worker.js",
   "observability": {
