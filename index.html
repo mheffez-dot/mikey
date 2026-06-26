@@ -3,22 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CPS Vendor Validator</title>
+    <title>CPS Central - Vendor Validator Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --cps-blue: #0371c5;
-            --cps-blue-dark: #025a9e;
-            --cps-blue-light: #e8f4fc;
+            --cps-navy: #0B3C5D;
+            --cps-navy-dark: #072a42;
+            --cps-navy-light: #1a5f8a;
+            --cps-gold: #D4AF37;
+            --cps-gold-light: #f4e5b8;
             --cps-white: #ffffff;
-            --cps-gray-light: #f5f8fe;
-            --cps-text-dark: #111111;
-            --cps-text-gray: #555555;
-            --cps-border: #e0e0e0;
-            --font-heading: 'Plus Jakarta Sans', sans-serif;
-            --font-body: 'Manrope', sans-serif;
+            --cps-gray-bg: #f8f9fa;
+            --cps-gray-border: #e9ecef;
+            --cps-text-dark: #212529;
+            --cps-text-gray: #6c757d;
+            --cps-success-bg: #d1e7dd;
+            --cps-success-text: #0f5132;
+            --cps-danger-bg: #f8d7da;
+            --cps-danger-text: #842029;
+            --cps-warning-bg: #fff3cd;
+            --cps-warning-text: #664d03;
+            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         * {
@@ -28,8 +35,8 @@
         }
 
         body {
-            font-family: var(--font-body);
-            background: linear-gradient(to bottom, var(--cps-white) 0%, var(--cps-gray-light) 95%);
+            font-family: var(--font-primary);
+            background: var(--cps-gray-bg);
             color: var(--cps-text-dark);
             min-height: 100vh;
             display: flex;
@@ -39,31 +46,30 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
+        /* Header Styles */
         header {
-            background: var(--cps-white);
-            border-bottom: 1px solid var(--cps-border);
-            padding: 1.25rem 0;
+            background: var(--cps-navy);
             width: 100%;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .header-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            height: 64px;
         }
 
-        .logo {
+        .logo-section {
             display: flex;
             align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--cps-blue);
+            gap: 16px;
         }
 
         .logo-svg {
@@ -71,12 +77,67 @@
             width: auto;
         }
 
-        .logo-text {
-            font-size: 1.4rem;
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .brand-name {
+            font-size: 1.1rem;
             font-weight: 700;
-            font-family: var(--font-heading);
-            color: var(--cps-blue);
-            line-height: 1.2;
+            color: var(--cps-white);
+            letter-spacing: 0.3px;
+        }
+
+        .portal-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--cps-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--cps-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cps-navy);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-status {
+            font-size: 0.75rem;
+            color: var(--cps-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .user-role {
+            font-size: 0.85rem;
+            color: var(--cps-white);
+            font-weight: 500;
         }
 
         main {
@@ -84,112 +145,113 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 4rem 1.5rem;
+            padding: 3rem 1.5rem;
             width: 100%;
         }
 
         .card {
             background: var(--cps-white);
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid var(--cps-border);
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--cps-gray-border);
             width: 100%;
-            max-width: 600px;
-            padding: 3rem 2.5rem;
-            text-align: center;
+            max-width: 700px;
+            padding: 2.5rem;
         }
 
         h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            font-family: var(--font-heading);
-            color: var(--cps-text-dark);
-            margin-bottom: 0.75rem;
-            line-height: 1.2;
-            background: linear-gradient(135deg, var(--cps-blue) 0%, var(--cps-blue-dark) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 1.75rem;
+            font-weight: 600;
+            font-family: var(--font-primary);
+            color: var(--cps-navy);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+            text-align: center;
         }
 
         .instructions {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--cps-text-gray);
             margin-bottom: 2rem;
             font-weight: 400;
+            text-align: center;
         }
 
         /* How It Works Section */
         .how-it-works {
-            background: var(--cps-blue-light);
-            border-radius: 12px;
-            padding: 2rem;
+            background: var(--cps-white);
+            border-radius: 8px;
+            padding: 1.75rem;
             margin-bottom: 2rem;
             text-align: left;
-            border: 1px solid rgba(3, 113, 197, 0.15);
+            border: 1px solid var(--cps-gray-border);
         }
 
         .how-it-works h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            font-family: var(--font-heading);
-            color: var(--cps-blue);
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: var(--font-primary);
+            color: var(--cps-navy);
             margin-bottom: 1.25rem;
             text-align: center;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
 
         .steps-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+            gap: 1.25rem;
             margin-bottom: 1rem;
         }
 
         .step {
             text-align: center;
+            padding: 1rem;
+            background: var(--cps-gray-bg);
+            border-radius: 6px;
+            border-left: 3px solid var(--cps-gold);
         }
 
         .step-number {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: var(--cps-blue);
+            width: 36px;
+            height: 36px;
+            background: var(--cps-navy);
             color: var(--cps-white);
             border-radius: 50%;
-            font-weight: 700;
-            font-size: 1.1rem;
+            font-weight: 600;
+            font-size: 1rem;
             margin: 0 auto 0.75rem;
         }
 
         .step p {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--cps-text-dark);
             line-height: 1.5;
         }
 
         .step strong {
-            color: var(--cps-blue);
+            color: var(--cps-navy);
             display: block;
             margin-bottom: 0.25rem;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
         }
 
         .coverage-note {
             text-align: center;
             padding-top: 1rem;
-            border-top: 1px solid rgba(3, 113, 197, 0.2);
+            border-top: 1px solid var(--cps-gray-border);
             color: var(--cps-text-gray);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             line-height: 1.5;
         }
 
         .coverage-note strong {
-            color: var(--cps-blue);
+            color: var(--cps-navy);
         }
 
         form {
@@ -204,32 +266,32 @@
 
         .file-upload-label {
             display: block;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             font-weight: 600;
-            color: var(--cps-text-dark);
+            color: var(--cps-navy);
             margin-bottom: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
         }
 
         .file-input-container {
             position: relative;
-            border: 2px dashed var(--cps-border);
-            border-radius: 12px;
-            padding: 2.5rem 1.5rem;
+            border: 2px dashed var(--cps-gray-border);
+            border-radius: 8px;
+            padding: 2rem 1.5rem;
             background: var(--cps-white);
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             cursor: pointer;
         }
 
         .file-input-container:hover {
-            border-color: var(--cps-blue);
-            background: var(--cps-blue-light);
+            border-color: var(--cps-navy);
+            background: var(--cps-gray-bg);
         }
 
         .file-input-container.has-file {
-            border-color: var(--cps-blue);
-            background: var(--cps-blue-light);
+            border-color: var(--cps-navy);
+            background: var(--cps-gray-bg);
             border-style: solid;
         }
 
@@ -237,18 +299,18 @@
             width: 48px;
             height: 48px;
             margin: 0 auto 1rem;
-            fill: var(--cps-blue);
+            fill: var(--cps-navy);
         }
 
         .file-text {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--cps-text-dark);
-            font-weight: 600;
+            font-weight: 500;
             margin-bottom: 0.5rem;
         }
 
         .file-hint {
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             color: var(--cps-text-gray);
         }
 
@@ -267,23 +329,20 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            padding: 1rem 2rem;
-            font-family: var(--font-heading);
-            font-size: 1rem;
-            font-weight: 700;
+            padding: 0.875rem 2rem;
+            font-family: var(--font-primary);
+            font-size: 0.95rem;
+            font-weight: 600;
             color: var(--cps-white);
-            background: var(--cps-blue);
+            background: var(--cps-navy);
             border: none;
-            border-radius: 100px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(3, 113, 197, 0.25);
+            transition: all 0.2s ease;
         }
 
         .btn-submit:hover {
-            background: var(--cps-blue-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(3, 113, 197, 0.35);
+            background: var(--cps-navy-dark);
         }
 
         .btn-submit:active {
@@ -292,10 +351,10 @@
 
         footer {
             text-align: center;
-            padding: 2rem;
+            padding: 1.5rem;
             color: var(--cps-text-gray);
-            font-size: 0.875rem;
-            border-top: 1px solid var(--cps-border);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--cps-gray-border);
             background: var(--cps-white);
         }
 
@@ -304,8 +363,8 @@
                 padding: 0 1rem;
             }
 
-            .logo-text {
-                font-size: 1.25rem;
+            .brand-name {
+                font-size: 1rem;
             }
 
             .card {
@@ -317,12 +376,12 @@
             }
 
             .file-input-container {
-                padding: 2rem 1rem;
+                padding: 1.5rem 1rem;
             }
 
             .steps-grid {
                 grid-template-columns: 1fr;
-                gap: 1.25rem;
+                gap: 1rem;
             }
 
             .step {
@@ -346,19 +405,29 @@
 <body>
     <header>
         <div class="header-container">
-            <a href="#" class="logo">
-                <svg class="logo-svg" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
+            <div class="logo-section">
+                <svg class="logo-svg" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#0371c5;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#0371c5;stop-opacity:1" />
+                            <stop offset="0%" style="stop-color:#D4AF37;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#B8942F;stop-opacity:1" />
                         </linearGradient>
                     </defs>
-                    <rect width="50" height="50" rx="8" fill="url(#logoGradient)"/>
-                    <path d="M15 35 L25 15 L35 35 M18 30 L32 30" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <rect width="50" height="50" rx="6" fill="url(#logoGradient)"/>
+                    <path d="M15 35 L25 15 L35 35 M18 30 L32 30" stroke="#0B3C5D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                 </svg>
-                <span class="logo-text">CPS Vendor Validator</span>
-            </a>
+                <div class="brand-text">
+                    <span class="brand-name">Consumer Priority Service</span>
+                    <span class="portal-name">Vendor Validator Portal</span>
+                </div>
+            </div>
+            <div class="user-section">
+                <div class="user-avatar">A</div>
+                <div class="user-info">
+                    <span class="user-status">Logged in as</span>
+                    <span class="user-role">Admin</span>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -478,54 +547,59 @@
                 resultsHTML = '<div style="text-align:left;margin-top:2rem;max-height:400px;overflow-y:auto;">';
                 
                 results.forEach((result, index) => {
-                    const verdictColor = result.verdict === 'Pass' ? '#28a745' : 
-                                        result.verdict === 'Fail' ? '#dc3545' : '#ffc107';
+                    const badgeStyle = result.verdict === 'Pass' ? 
+                        `background: var(--cps-success-bg); color: var(--cps-success-text);` :
+                        result.verdict === 'Fail' ?
+                        `background: var(--cps-danger-bg); color: var(--cps-danger-text);` :
+                        `background: var(--cps-warning-bg); color: var(--cps-warning-text);`;
+                    
+                    const icon = result.verdict === 'Pass' ? '✓' : result.verdict === 'Fail' ? '✕' : '!';
                     
                     resultsHTML += `
-                        <div style="border:1px solid #d1d9e6;border-radius:8px;padding:1.5rem;margin-bottom:1rem;background:#fafbfc;">
+                        <div style="border:1px solid var(--cps-gray-border);border-radius:6px;padding:1.25rem;margin-bottom:1rem;background:#fafbfc;">
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-                                <h3 style="color:#005696;font-size:1.1rem;margin:0;">${index + 1}. ${result.domain}</h3>
-                                <span style="background:${verdictColor};color:white;padding:0.25rem 0.75rem;border-radius:4px;font-weight:600;font-size:0.85rem;">${result.verdict}</span>
+                                <h3 style="color:var(--cps-navy);font-size:1rem;margin:0;font-weight:600;">${index + 1}. ${result.domain}</h3>
+                                <span style="${badgeStyle}padding:0.25rem 0.75rem;border-radius:4px;font-weight:600;font-size:0.8rem;display:inline-flex;align-items:center;gap:4px;">${icon} ${result.verdict}</span>
                             </div>
                             
                             ${result.extracted?.title ? `
                             <div style="margin-bottom:0.75rem;">
-                                <strong style="color:#005696;font-size:0.85rem;text-transform:uppercase;">Title:</strong>
-                                <p style="color:#555555;font-size:0.9rem;margin:0.25rem 0 0 0;">${escapeHtml(result.extracted.title)}</p>
+                                <strong style="color:var(--cps-navy);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px;">Title:</strong>
+                                <p style="color:var(--cps-text-gray);font-size:0.85rem;margin:0.25rem 0 0 0;line-height:1.5;">${escapeHtml(result.extracted.title)}</p>
                             </div>` : ''}
                             
                             ${result.extracted?.description ? `
                             <div style="margin-bottom:0.75rem;">
-                                <strong style="color:#005696;font-size:0.85rem;text-transform:uppercase;">Description:</strong>
-                                <p style="color:#555555;font-size:0.9rem;margin:0.25rem 0 0 0;">${escapeHtml(result.extracted.description)}</p>
+                                <strong style="color:var(--cps-navy);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px;">Description:</strong>
+                                <p style="color:var(--cps-text-gray);font-size:0.85rem;margin:0.25rem 0 0 0;line-height:1.5;">${escapeHtml(result.extracted.description)}</p>
                             </div>` : ''}
                             
                             ${result.extracted?.products && result.extracted.products.length > 0 ? `
                             <div style="margin-bottom:0.75rem;">
-                                <strong style="color:#005696;font-size:0.85rem;text-transform:uppercase;">Product Menu:</strong>
-                                <ul style="color:#555555;font-size:0.9rem;margin:0.25rem 0 0 0;padding-left:1.25rem;">
+                                <strong style="color:var(--cps-navy);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px;">Product Menu:</strong>
+                                <ul style="color:var(--cps-text-gray);font-size:0.85rem;margin:0.25rem 0 0 0;padding-left:1.25rem;line-height:1.5;">
                                     ${result.extracted.products.slice(0, 5).map(p => `<li>${escapeHtml(p)}</li>`).join('')}
                                     ${result.extracted.products.length > 5 ? `<li><em>...and ${result.extracted.products.length - 5} more</em></li>` : ''}
                                 </ul>
                             </div>` : ''}
                             
-                            <div style="background:var(--cps-light-blue);border-radius:6px;padding:1rem;margin-top:1rem;">
-                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
-                                    <strong style="color:#005696;font-size:0.85rem;text-transform:uppercase;">Confidence Score:</strong>
-                                    <span style="font-weight:700;color:#005696;">${result.confidence}%</span>
+                            <div style="background:var(--cps-gray-bg);border-radius:4px;padding:0.875rem;margin-top:1rem;border:1px solid var(--cps-gray-border);">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.625rem;">
+                                    <strong style="color:var(--cps-navy);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px;">Confidence Score:</strong>
+                                    <span style="font-weight:600;color:var(--cps-navy);">${result.confidence}%</span>
                                 </div>
-                                <div style="margin-bottom:0.75rem;">
-                                    <strong style="color:#005696;font-size:0.85rem;text-transform:uppercase;">Matched Category:</strong>
-                                    <p style="color:#555555;font-size:0.9rem;margin:0.25rem 0 0 0;">${escapeHtml(result.category)}</p>
+                                <div style="margin-bottom:0.625rem;">
+                                    <strong style="color:var(--cps-navy);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px;">Matched Category:</strong>
+                                    <p style="color:var(--cps-text-gray);font-size:0.85rem;margin:0.25rem 0 0 0;line-height:1.5;">${escapeHtml(result.category)}</p>
                                 </div>
                                 ${result.evidence && result.evidence.length > 0 ? `
-                                <div style="margin-bottom:0.75rem;">
-                                    <strong style="color:#005696;font-size:0.85rem;text-transform:uppercase;">Evidence:</strong>
-                                    <p style="color:#555555;font-size:0.9rem;margin:0.25rem 0 0 0;">${escapeHtml(result.evidence.join(', '))}</p>
+                                <div style="margin-bottom:0.625rem;">
+                                    <strong style="color:var(--cps-navy);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px;">Evidence:</strong>
+                                    <p style="color:var(--cps-text-gray);font-size:0.85rem;margin:0.25rem 0 0 0;line-height:1.5;">${escapeHtml(result.evidence.join(', '))}</p>
                                 </div>` : ''}
                                 <div>
-                                    <strong style="color:#005696;font-size:0.85rem;text-transform:uppercase;">Reason:</strong>
-                                    <p style="color:#555555;font-size:0.9rem;margin:0.25rem 0 0 0;">${escapeHtml(result.reason)}</p>
+                                    <strong style="color:var(--cps-navy);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px;">Reason:</strong>
+                                    <p style="color:var(--cps-text-gray);font-size:0.85rem;margin:0.25rem 0 0 0;line-height:1.5;">${escapeHtml(result.reason)}</p>
                                 </div>
                             </div>
                         </div>
@@ -534,28 +608,22 @@
                 
                 resultsHTML += '</div>';
             } else {
-                resultsHTML = '<p style="color:#555555;margin-top:1rem;">No results to display.</p>';
+                resultsHTML = '<p style="color:var(--cps-text-gray);margin-top:1rem;">No results to display.</p>';
             }
 
             card.innerHTML = `
-                <svg style="width: 80px; height: 80px; fill: url(#successGradient); margin-bottom: 1.5rem; filter: drop-shadow(0 4px 8px rgba(40, 167, 69, 0.3));" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="successGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#28a745;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#20c997;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                <svg style="width: 72px; height: 72px; fill: var(--cps-navy); margin-bottom: 1.25rem;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
                 </svg>
-                <h1 style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1rem;">Form Submitted</h1>
-                <p style="color: #555555; font-size: 1rem; margin-bottom: 1rem;">Your validation request has been submitted successfully.</p>
-                <div style="display:flex;gap:1rem;justify-content:center;margin-bottom:1.5rem;">
-                    <span style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color:white; padding:0.5rem 1rem; border-radius:8px; font-weight:600; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">Pass: ${passCount}</span>
-                    <span style="background: linear-gradient(135deg, #dc3545 0%, #ff6b6b 100%); color:white; padding:0.5rem 1rem; border-radius:8px; font-weight:600; box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);">Fail: ${failCount}</span>
-                    <span style="background: linear-gradient(135deg, #ffc107 0%, #ffd93d 100%); color:#1a1a1a; padding:0.5rem 1rem; border-radius:8px; font-weight:600; box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);">Mixed: ${mixedCount}</span>
+                <h1 style="color: var(--cps-navy); margin-bottom: 0.75rem;">Validation Complete</h1>
+                <p style="color: var(--cps-text-gray); font-size: 0.95rem; margin-bottom: 1.5rem;">Your vendor domains have been validated successfully.</p>
+                <div style="display:flex;gap:0.75rem;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap;">
+                    <span style="background: var(--cps-success-bg); color: var(--cps-success-text); padding:0.5rem 1rem; border-radius:4px; font-weight:600; font-size:0.9rem; border:1px solid rgba(15, 81, 50, 0.2);">✓ Pass: ${passCount}</span>
+                    <span style="background: var(--cps-danger-bg); color: var(--cps-danger-text); padding:0.5rem 1rem; border-radius:4px; font-weight:600; font-size:0.9rem; border:1px solid rgba(132, 32, 41, 0.2);">✕ Fail: ${failCount}</span>
+                    <span style="background: var(--cps-warning-bg); color: var(--cps-warning-text); padding:0.5rem 1rem; border-radius:4px; font-weight:600; font-size:0.9rem; border:1px solid rgba(102, 77, 3, 0.2);">! Mixed: ${mixedCount}</span>
                 </div>
                 ${resultsHTML}
-                <button onclick="location.reload()" class="btn-submit" style="max-width: 200px;margin-top:1.5rem;">Validate Another File</button>
+                <button onclick="location.reload()" class="btn-submit" style="max-width: 220px;margin-top:1.5rem;">Validate Another File</button>
             `;
         }
 
