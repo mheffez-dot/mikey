@@ -357,22 +357,25 @@
             
             <!-- How It Works Section -->
             <div class="how-it-works">
-                <h3>How It Works</h3>
+                <h3>How Validation Works</h3>
+                <p style="text-align:center;font-size:0.9rem;color:var(--text-gray);margin-bottom:1.25rem;">
+                    For each domain in your CSV, our system performs a comprehensive analysis:
+                </p>
                 <div class="steps-grid">
                     <div class="step">
                         <div class="step-number">1</div>
-                        <p><strong>Fetch</strong><br>Retrieves site data (direct or via unblocker).</p>
+                        <p><strong>Fetch Website</strong><br>Direct fetch first, then Bright Data unblocker for bot-protected sites.</p>
                     </div>
                     <div class="step">
                         <div class="step-number">2</div>
-                        <p><strong>Analyze</strong><br>AI classifies products against CPS policy.</p>
+                        <p><strong>Read &amp; Classify</strong><br>Extracts title, description, and product menu. DeepSeek AI classifies against CPS coverage policy.</p>
                     </div>
                     <div class="step">
                         <div class="step-number">3</div>
-                        <p><strong>Verdict</strong><br>Returns Pass/Fail with confidence scores.</p>
+                        <p><strong>Return Verdict</strong><br>Pass/Fail/Mixed with confidence score, matched category, evidence, and reason.</p>
                     </div>
                 </div>
-                <p class="coverage-note"><small><strong>Covered:</strong> Electronics, Appliances, Tools, Firearms. <strong>Excluded:</strong> Apparel, Food, Services, Software.</small></p>
+                <p class="coverage-note"><small><strong>Covered:</strong> Powered/durable high-ticket goods (electronics, appliances, tools, firearms). <strong>Excluded:</strong> Apparel, food, services, software.</small></p>
             </div>
 
             <form method="post" enctype="multipart/form-data" action="https://pvd.pei.mybluehost.me/form/9c8d7e6f-5a4b-4c3d-8e2f-1a0b9c8d7e6f">
