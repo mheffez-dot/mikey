@@ -9,15 +9,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --cps-blue: #005696;
-            --cps-blue-dark: #003d6b;
-            --cps-light-blue: #e6f0f7;
-            --text-dark: #1a1a1a;
-            --text-gray: #555555;
-            --border-color: #d1d9e6;
-            --white: #ffffff;
-            --bg-gradient-start: #f0f4f8;
-            --bg-gradient-end: #ffffff;
+            --cps-blue: #0371c5;
+            --cps-blue-dark: #025a9e;
+            --cps-blue-light: #e8f4fc;
+            --cps-white: #ffffff;
+            --cps-gray-light: #f5f8fe;
+            --cps-text-dark: #111111;
+            --cps-text-gray: #555555;
+            --cps-border: #e0e0e0;
+            --font-heading: 'Plus Jakarta Sans', sans-serif;
+            --font-body: 'Manrope', sans-serif;
         }
 
         * {
@@ -27,9 +28,9 @@
         }
 
         body {
-            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-            color: var(--text-dark);
+            font-family: var(--font-body);
+            background: linear-gradient(to bottom, var(--cps-white) 0%, var(--cps-gray-light) 95%);
+            color: var(--cps-text-dark);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -39,11 +40,13 @@
         }
 
         header {
-            background: var(--white);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 0;
+            background: var(--cps-white);
+            border-bottom: 1px solid var(--cps-border);
+            padding: 1.25rem 0;
             width: 100%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .header-container {
@@ -64,14 +67,14 @@
         }
 
         .logo-svg {
-            height: 42px;
+            height: 40px;
             width: auto;
         }
 
         .logo-text {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            letter-spacing: -0.5px;
+            font-family: var(--font-heading);
             color: var(--cps-blue);
             line-height: 1.2;
         }
@@ -81,49 +84,51 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 3rem 1.5rem;
+            padding: 4rem 1.5rem;
             width: 100%;
         }
 
         .card {
-            background: var(--white);
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 86, 150, 0.08), 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid rgba(0, 86, 150, 0.1);
+            background: var(--cps-white);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--cps-border);
             width: 100%;
-            max-width: 520px;
+            max-width: 600px;
             padding: 3rem 2.5rem;
             text-align: center;
         }
 
         h1 {
-            font-size: 1.75rem;
+            font-size: 2rem;
             font-weight: 700;
-            color: var(--cps-blue);
+            font-family: var(--font-heading);
+            color: var(--cps-text-dark);
             margin-bottom: 0.75rem;
-            letter-spacing: -0.3px;
+            line-height: 1.2;
         }
 
         .instructions {
             font-size: 1rem;
-            color: var(--text-gray);
-            margin-bottom: 1.5rem;
-            font-weight: 500;
+            color: var(--cps-text-gray);
+            margin-bottom: 2rem;
+            font-weight: 400;
         }
 
         /* How It Works Section */
         .how-it-works {
-            background: var(--cps-light-blue);
-            border-radius: 8px;
-            padding: 1.5rem;
+            background: var(--cps-blue-light);
+            border-radius: 12px;
+            padding: 2rem;
             margin-bottom: 2rem;
             text-align: left;
-            border: 1px solid rgba(0, 86, 150, 0.15);
+            border: 1px solid rgba(3, 113, 197, 0.15);
         }
 
         .how-it-works h3 {
             font-size: 1.1rem;
             font-weight: 700;
+            font-family: var(--font-heading);
             color: var(--cps-blue);
             margin-bottom: 1.25rem;
             text-align: center;
@@ -134,7 +139,7 @@
         .steps-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
+            gap: 1.5rem;
             margin-bottom: 1rem;
         }
 
@@ -146,21 +151,20 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             background: var(--cps-blue);
-            color: var(--white);
+            color: var(--cps-white);
             border-radius: 50%;
             font-weight: 700;
             font-size: 1.1rem;
             margin: 0 auto 0.75rem;
-            box-shadow: 0 2px 8px rgba(0, 86, 150, 0.25);
         }
 
         .step p {
             font-size: 0.85rem;
-            color: var(--text-dark);
-            line-height: 1.4;
+            color: var(--cps-text-dark);
+            line-height: 1.5;
         }
 
         .step strong {
@@ -168,13 +172,14 @@
             display: block;
             margin-bottom: 0.25rem;
             font-size: 0.9rem;
+            font-weight: 600;
         }
 
         .coverage-note {
             text-align: center;
             padding-top: 1rem;
-            border-top: 1px solid rgba(0, 86, 150, 0.2);
-            color: var(--text-gray);
+            border-top: 1px solid rgba(3, 113, 197, 0.2);
+            color: var(--cps-text-gray);
             font-size: 0.8rem;
             line-height: 1.5;
         }
@@ -197,7 +202,7 @@
             display: block;
             font-size: 0.875rem;
             font-weight: 600;
-            color: var(--text-dark);
+            color: var(--cps-text-dark);
             margin-bottom: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -205,22 +210,22 @@
 
         .file-input-container {
             position: relative;
-            border: 2px dashed var(--border-color);
-            border-radius: 8px;
+            border: 2px dashed var(--cps-border);
+            border-radius: 12px;
             padding: 2.5rem 1.5rem;
-            background: var(--cps-light-blue);
-            transition: all 0.2s ease;
+            background: var(--cps-white);
+            transition: all 0.3s ease;
             cursor: pointer;
         }
 
         .file-input-container:hover {
             border-color: var(--cps-blue);
-            background: rgba(0, 86, 150, 0.05);
+            background: var(--cps-blue-light);
         }
 
         .file-input-container.has-file {
             border-color: var(--cps-blue);
-            background: rgba(0, 86, 150, 0.08);
+            background: var(--cps-blue-light);
             border-style: solid;
         }
 
@@ -229,19 +234,18 @@
             height: 48px;
             margin: 0 auto 1rem;
             fill: var(--cps-blue);
-            opacity: 0.8;
         }
 
         .file-text {
             font-size: 1rem;
-            color: var(--text-dark);
+            color: var(--cps-text-dark);
             font-weight: 600;
             margin-bottom: 0.5rem;
         }
 
         .file-hint {
             font-size: 0.875rem;
-            color: var(--text-gray);
+            color: var(--cps-text-gray);
         }
 
         input[type="file"] {
@@ -260,24 +264,22 @@
             justify-content: center;
             width: 100%;
             padding: 1rem 2rem;
-            font-family: inherit;
+            font-family: var(--font-heading);
             font-size: 1rem;
             font-weight: 700;
-            color: var(--white);
+            color: var(--cps-white);
             background: var(--cps-blue);
             border: none;
-            border-radius: 8px;
+            border-radius: 100px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 12px rgba(0, 86, 150, 0.2);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(3, 113, 197, 0.25);
         }
 
         .btn-submit:hover {
             background: var(--cps-blue-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(0, 86, 150, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(3, 113, 197, 0.35);
         }
 
         .btn-submit:active {
@@ -287,10 +289,10 @@
         footer {
             text-align: center;
             padding: 2rem;
-            color: var(--text-gray);
+            color: var(--cps-text-gray);
             font-size: 0.875rem;
-            border-top: 1px solid var(--border-color);
-            background: var(--white);
+            border-top: 1px solid var(--cps-border);
+            background: var(--cps-white);
         }
 
         @media (max-width: 600px) {
@@ -342,7 +344,13 @@
         <div class="header-container">
             <a href="#" class="logo">
                 <svg class="logo-svg" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="50" height="50" rx="8" fill="#005696"/>
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#0371c5;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#0371c5;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="50" height="50" rx="8" fill="url(#logoGradient)"/>
                     <path d="M15 35 L25 15 L35 35 M18 30 L32 30" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                 </svg>
                 <span class="logo-text">CPS Vendor Validator</span>
@@ -358,7 +366,7 @@
             <!-- How It Works Section -->
             <div class="how-it-works">
                 <h3>How Validation Works</h3>
-                <p style="text-align:center;font-size:0.9rem;color:var(--text-gray);margin-bottom:1.25rem;">
+                <p style="text-align:center;font-size:0.9rem;color:var(--cps-text-gray);margin-bottom:1.25rem;">
                     For each domain in your CSV, our system performs a comprehensive analysis:
                 </p>
                 <div class="steps-grid">
@@ -375,7 +383,7 @@
                         <p><strong>Return Verdict</strong><br>Pass/Fail/Mixed with confidence score, matched category, evidence, and reason.</p>
                     </div>
                 </div>
-                <p class="coverage-note"><small><strong>Covered:</strong> Powered/durable high-ticket goods (electronics, appliances, tools, firearms). <strong>Excluded:</strong> Apparel, food, services, software.</small></p>
+                <p class="coverage-note"><small><strong>Covered:</strong> Powered/durable high-ticket goods (electronics, appliances, tools, firearms). <strong>Excluded:</strong> Apparel, food, services, consumables.</small></p>
             </div>
 
             <form id="validationForm" enctype="multipart/form-data">
@@ -526,15 +534,21 @@
             }
 
             card.innerHTML = `
-                <svg style="width: 80px; height: 80px; fill: #005696; margin-bottom: 1.5rem;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg style="width: 80px; height: 80px; fill: url(#successGradient); margin-bottom: 1.5rem; filter: drop-shadow(0 4px 8px rgba(40, 167, 69, 0.3));" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="successGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#28a745;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#20c997;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                 </svg>
-                <h1 style="color: #005696; margin-bottom: 1rem;">Form Submitted</h1>
+                <h1 style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1rem;">Form Submitted</h1>
                 <p style="color: #555555; font-size: 1rem; margin-bottom: 1rem;">Your validation request has been submitted successfully.</p>
                 <div style="display:flex;gap:1rem;justify-content:center;margin-bottom:1.5rem;">
-                    <span style="background:#28a745;color:white;padding:0.5rem 1rem;border-radius:6px;font-weight:600;">Pass: ${passCount}</span>
-                    <span style="background:#dc3545;color:white;padding:0.5rem 1rem;border-radius:6px;font-weight:600;">Fail: ${failCount}</span>
-                    <span style="background:#ffc107;color:#1a1a1a;padding:0.5rem 1rem;border-radius:6px;font-weight:600;">Mixed: ${mixedCount}</span>
+                    <span style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color:white; padding:0.5rem 1rem; border-radius:8px; font-weight:600; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">Pass: ${passCount}</span>
+                    <span style="background: linear-gradient(135deg, #dc3545 0%, #ff6b6b 100%); color:white; padding:0.5rem 1rem; border-radius:8px; font-weight:600; box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);">Fail: ${failCount}</span>
+                    <span style="background: linear-gradient(135deg, #ffc107 0%, #ffd93d 100%); color:#1a1a1a; padding:0.5rem 1rem; border-radius:8px; font-weight:600; box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);">Mixed: ${mixedCount}</span>
                 </div>
                 ${resultsHTML}
                 <button onclick="location.reload()" class="btn-submit" style="max-width: 200px;margin-top:1.5rem;">Validate Another File</button>
