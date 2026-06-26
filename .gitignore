@@ -1,1 +1,8 @@
 (index.html is a source file, so no changes needed to .gitignore)
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
