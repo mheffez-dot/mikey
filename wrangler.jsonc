@@ -1,7 +1,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "mikey",
+  "name": "cps-validator",
   "compatibility_date": "2026-06-26",
+  "main": "worker.js",
   "observability": {
     "enabled": true
   },
@@ -10,5 +11,9 @@
   },
   "compatibility_flags": [
     "nodejs_compat"
-  ]
+  ],
+  "vars": {
+    "BRIGHT_DATA_API_KEY": "",
+    "DEEPSEEK_API_KEY": ""
+  }
 }
