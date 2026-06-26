@@ -474,6 +474,50 @@
                 
                 <button type="submit" class="btn-submit">Start Validation</button>
             </form>
+            
+            <!-- Processing State -->
+            <div id="processingState" class="hidden text-center py-8">
+                <div class="mb-4">
+                    <svg class="animate-spin mx-auto h-12 w-12 text-[#0B3C5D]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+                <p id="progressText" class="text-lg font-medium text-[#0B3C5D] mb-2"></p>
+                <div class="w-full bg-gray-200 rounded-full h-2.5 max-w-md mx-auto">
+                    <div id="progressBar" class="bg-[#0B3C5D] h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <!-- Results State -->
+            <div id="resultsState" class="hidden">
+                <div class="text-center mb-6">
+                    <svg class="mx-auto h-16 w-16 text-[#0B3C5D] mb-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <h2 class="text-2xl font-bold text-[#0B3C5D] mb-2">Validation Complete</h2>
+                    <p class="text-gray-600">Your vendor domains have been analyzed against CPS coverage policy.</p>
+                </div>
+                
+                <div class="flex justify-center gap-4 mb-6 flex-wrap">
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-lg px-6 py-3 text-center">
+                        <div class="text-2xl font-bold text-emerald-800" id="statsPass">0</div>
+                        <div class="text-sm text-emerald-700 uppercase tracking-wide">Covered</div>
+                    </div>
+                    <div class="bg-rose-50 border border-rose-200 rounded-lg px-6 py-3 text-center hidden">
+                        <div class="text-2xl font-bold text-rose-800" id="statsFail">0</div>
+                        <div class="text-sm text-rose-700 uppercase tracking-wide">Excluded</div>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg px-6 py-3 text-center hidden">
+                        <div class="text-2xl font-bold text-amber-800" id="statsMixed">0</div>
+                        <div class="text-sm text-amber-700 uppercase tracking-wide">Review</div>
+                    </div>
+                </div>
+                
+                <div id="resultsList" class="space-y-4 max-h-[600px] overflow-y-auto pr-2"></div>
+                
+                <button id="resetBtn" class="btn-submit w-full max-w-xs mx-auto block mt-6">Validate Another File</button>
+            </div>
         </div>
     </main>
 
@@ -481,13 +525,47 @@
         <p>&copy; 2024 CPS Central. All rights reserved.</p>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
-        const fileInput = document.getElementById('domains_csv');
+        // Coverage Rules - CPS Central Policy
+        const COVERED_CATEGORIES = [
+            'electronics', 'appliances', 'tools', 'firearms', 'power tools', 
+            'kitchen appliances', 'home appliances', 'gadgets', 'computers', 
+            'laptops', 'phones', 'tablets', 'cameras', 'audio', 'video', 
+            'hardware', 'machinery', 'equipment', 'durable goods', 'high-ticket',
+            'refrigerators', 'washers', 'dryers', 'ovens', 'dishwashers',
+            'televisions', 'smartphones', 'headphones', 'speakers', 'drills',
+            'saws', 'power equipment', 'consumer electronics', 'tech'
+        ];
+        
+        const EXCLUDED_CATEGORIES = [
+            'apparel', 'clothing', 'food', 'services', 'consumables', 'groceries', 
+            'fashion', 'shoes', 'accessories', 'beauty', 'health', 'supplements',
+            'cosmetics', 'perishable', 'digital goods', 'software', 'subscription',
+            'jewelry', 'watches', 'furniture', 'mattress', 'bedding', 'toys',
+            'books', 'media', 'games', 'sports equipment', 'outdoor gear',
+            'automotive', 'parts', 'pet supplies', 'baby products', 'office supplies'
+        ];
+
+        // DOM Elements
         const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('domains_csv');
         const fileText = dropZone.querySelector('.file-text');
         const form = document.getElementById('validationForm');
         const card = document.querySelector('.card');
+        const processingState = document.getElementById('processingState');
+        const resultsState = document.getElementById('resultsState');
+        const progressText = document.getElementById('progressText');
+        const progressBar = document.getElementById('progressBar');
+        const statsPass = document.getElementById('statsPass');
+        const statsFail = document.getElementById('statsFail');
+        const statsMixed = document.getElementById('statsMixed');
+        const resultsList = document.getElementById('resultsList');
+        const resetBtn = document.getElementById('resetBtn');
 
+        let currentResults = [];
+
+        // File Input Event Listeners
         fileInput.addEventListener('change', function() {
             if (this.files && this.files[0]) {
                 dropZone.classList.add('has-file');
@@ -497,6 +575,369 @@
                 fileText.textContent = 'Drag & drop your CSV here or click to browse';
             }
         });
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-[#0B3C5D]', 'bg-blue-50');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('border-[#0B3C5D]', 'bg-blue-50');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-[#0B3C5D]', 'bg-blue-50');
+            const files = e.dataTransfer.files;
+            if (files.length) handleFile(files[0]);
+        });
+
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        resetBtn.addEventListener('click', resetApp);
+
+        // Form Submit Handler
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const file = fileInput.files[0];
+
+            if (!file || !file.name.endsWith('.csv')) {
+                alert('Please upload a valid CSV file');
+                return;
+            }
+
+            // Show processing state
+            form.classList.add('hidden');
+            processingState.classList.remove('hidden');
+
+            Papa.parse(file, {
+                complete: async (results) => {
+                    await processVendors(results.data);
+                },
+                header: true,
+                skipEmptyLines: true
+            });
+        });
+
+        // Core Processing Logic
+        async function processVendors(data) {
+            currentResults = [];
+            const total = data.filter(row => row['domain'] || row['Domain'] || row['website'] || row['Website']).length;
+            let passCount = 0;
+            let failCount = 0;
+            let mixedCount = 0;
+
+            for (let i = 0; i < data.length; i++) {
+                const row = data[i];
+                const vendorName = row['Vendor Name'] || row['vendor_name'] || row['Name'] || row['vendor'] || row['domain'] || 'Unknown Vendor';
+                const websiteUrl = row['domain'] || row['Domain'] || row['website'] || row['Website'] || row['URL'] || row['url'] || '';
+
+                updateProgress(i + 1, total);
+
+                if (!websiteUrl) {
+                    const result = {
+                        name: vendorName,
+                        url: 'N/A',
+                        status: 'fail',
+                        reason: 'No website provided',
+                        categories: []
+                    };
+                    currentResults.push(result);
+                    failCount++;
+                    continue;
+                }
+
+                // Normalize URL
+                let cleanUrl = websiteUrl.trim();
+                if (!cleanUrl.startsWith('http')) {
+                    cleanUrl = 'https://' + cleanUrl;
+                }
+
+                try {
+                    // Fetch website content via CORS proxy
+                    const analysis = await analyzeWebsite(cleanUrl);
+                    
+                    const result = {
+                        name: vendorName,
+                        url: cleanUrl,
+                        status: analysis.status,
+                        reason: analysis.reason,
+                        categories: analysis.categories
+                    };
+                    
+                    currentResults.push(result);
+                    
+                    if (analysis.status === 'pass') passCount++;
+                    else if (analysis.status === 'fail') failCount++;
+                    else mixedCount++;
+
+                } catch (error) {
+                    const result = {
+                        name: vendorName,
+                        url: cleanUrl,
+                        status: 'mixed',
+                        reason: `Could not verify: ${error.message}`,
+                        categories: ['unknown']
+                    };
+                    currentResults.push(result);
+                    mixedCount++;
+                }
+
+                // Small delay to be polite to servers
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+
+            showResults(passCount, failCount, mixedCount);
+        }
+
+        // Website Analysis Function - Fetches and analyzes actual website content
+        async function analyzeWebsite(url) {
+            try {
+                // Using AllOrigins proxy to bypass CORS restrictions
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+                const response = await fetch(proxyUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch (${response.status})`);
+                }
+                
+                const data = await response.json();
+                const html = data.contents;
+                
+                if (!html || html.length < 100) {
+                    throw new Error('No content retrieved');
+                }
+
+                // Create a temporary DOM element to parse HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Extract text content from key areas for analysis
+                const title = doc.title || '';
+                const metaDescription = doc.querySelector('meta[name="description"]')?.content || '';
+                const metaKeywords = doc.querySelector('meta[name="keywords"]')?.content || '';
+                const h1 = doc.querySelector('h1')?.textContent || '';
+                
+                // Get navigation, main content, and footer text
+                const navText = Array.from(doc.querySelectorAll('nav, .nav, .navigation, header')).map(el => el.textContent).join(' ');
+                const mainText = Array.from(doc.querySelectorAll('main, .main, #main, .content, article')).map(el => el.textContent).join(' ');
+                const footerText = Array.from(doc.querySelectorAll('footer, .footer')).map(el => el.textContent).join(' ');
+                const categoryLinks = Array.from(doc.querySelectorAll('a[href*="category"], a[href*="shop"], a[href*="product"], .menu-item, .nav-link')).map(el => el.textContent).join(' ');
+                
+                // Combine all text for analysis
+                const fullText = [
+                    title,
+                    metaDescription,
+                    metaKeywords,
+                    h1,
+                    navText,
+                    mainText,
+                    footerText,
+                    categoryLinks,
+                    html.toLowerCase()
+                ].join(' ').toLowerCase();
+
+                // Check for covered items (high-ticket durable goods)
+                const foundCovered = COVERED_CATEGORIES.filter(cat => {
+                    const regex = new RegExp(`\\b${cat.replace(/-/g, '[- ]')}\\b`, 'i');
+                    return regex.test(fullText);
+                });
+
+                // Check for excluded items
+                const foundExcluded = EXCLUDED_CATEGORIES.filter(cat => {
+                    const regex = new RegExp(`\\b${cat.replace(/-/g, '[- ]')}\\b`, 'i');
+                    return regex.test(fullText);
+                });
+
+                // Remove duplicates
+                const uniqueCovered = [...new Set(foundCovered)];
+                const uniqueExcluded = [...new Set(foundExcluded)];
+
+                // Decision Logic based on CPS coverage policy
+                if (uniqueCovered.length > 0 && uniqueExcluded.length === 0) {
+                    return {
+                        status: 'pass',
+                        reason: 'Primarily sells covered high-ticket goods (electronics, appliances, tools, etc.)',
+                        categories: uniqueCovered
+                    };
+                } else if (uniqueExcluded.length > 0 && uniqueCovered.length === 0) {
+                    return {
+                        status: 'fail',
+                        reason: 'Sells excluded items (apparel, food, services, consumables, etc.)',
+                        categories: uniqueExcluded
+                    };
+                } else if (uniqueCovered.length > 0 && uniqueExcluded.length > 0) {
+                    return {
+                        status: 'mixed',
+                        reason: 'Sells both covered and excluded items - requires manual review',
+                        categories: [...uniqueCovered, ...uniqueExcluded]
+                    };
+                } else {
+                    // If no clear keywords found, check for product/e-commerce signals
+                    const hasProductSignals = fullText.includes('add to cart') || 
+                                            fullText.includes('price') || 
+                                            fullText.includes('shop now') ||
+                                            fullText.includes('buy now') ||
+                                            fullText.includes('$') ||
+                                            fullText.includes('sale');
+                    
+                    // Check for service-based indicators
+                    const hasServiceSignals = fullText.includes('consulting') ||
+                                            fullText.includes('services') ||
+                                            fullText.includes('appointment') ||
+                                            fullText.includes('booking') ||
+                                            fullText.includes('repair') ||
+                                            fullText.includes('installation');
+
+                    if (hasServiceSignals && !hasProductSignals) {
+                        return {
+                            status: 'fail',
+                            reason: 'Appears to be a service-based business (excluded)',
+                            categories: ['services']
+                        };
+                    }
+                    
+                    if (hasProductSignals) {
+                        return {
+                            status: 'mixed',
+                            reason: 'General e-commerce retailer - product types unclear, manual review recommended',
+                            categories: ['general_retail']
+                        };
+                    }
+                    
+                    return {
+                        status: 'mixed',
+                        reason: 'Unable to determine product types from homepage content - manual review required',
+                        categories: ['unknown']
+                    };
+                }
+
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        // UI Updates
+        function updateProgress(current, total) {
+            const percent = Math.round((current / total) * 100);
+            progressText.textContent = `Analyzing vendor ${current} of ${total}...`;
+            progressBar.style.width = `${percent}%`;
+        }
+
+        function showResults(pass, fail, mixed) {
+            processingState.classList.add('hidden');
+            resultsState.classList.remove('hidden');
+
+            statsPass.parentElement.classList.toggle('hidden', pass === 0);
+            statsFail.parentElement.classList.toggle('hidden', fail === 0);
+            statsMixed.parentElement.classList.toggle('hidden', mixed === 0);
+
+            statsPass.textContent = pass;
+            statsFail.textContent = fail;
+            statsMixed.textContent = mixed;
+
+            renderResultsList();
+        }
+
+        function renderResultsList() {
+            resultsList.innerHTML = '';
+            
+            // Sort: Fail first, then Mixed, then Pass
+            const sorted = [...currentResults].sort((a, b) => {
+                const order = { fail: 0, mixed: 1, pass: 2 };
+                return order[a.status] - order[b.status];
+            });
+
+            sorted.forEach((result, index) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-200';
+                
+                const statusConfig = {
+                    pass: { 
+                        bg: 'bg-emerald-50', 
+                        text: 'text-emerald-800', 
+                        border: 'border-emerald-200',
+                        icon: '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>',
+                        label: 'COVERED'
+                    },
+                    fail: { 
+                        bg: 'bg-rose-50', 
+                        text: 'text-rose-800', 
+                        border: 'border-rose-200',
+                        icon: '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>',
+                        label: 'EXCLUDED'
+                    },
+                    mixed: { 
+                        bg: 'bg-amber-50', 
+                        text: 'text-amber-800', 
+                        border: 'border-amber-200',
+                        icon: '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>',
+                        label: 'REVIEW'
+                    }
+                };
+
+                const config = statusConfig[result.status];
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-lg font-semibold text-[#0B3C5D] truncate">${escapeHtml(result.name)}</h4>
+                            <a href="${result.url}" target="_blank" rel="noopener noreferrer" class="text-sm text-gray-500 hover:text-[#0B3C5D] flex items-center gap-1 mt-1">
+                                ${escapeHtml(result.url)}
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                            </a>
+                        </div>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide ${config.bg} ${config.text} ${config.border} border ml-4 whitespace-nowrap">
+                            ${config.icon}
+                            ${config.label}
+                        </span>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-md p-3 mb-3">
+                        <p class="text-sm text-gray-700"><span class="font-medium">Analysis:</span> ${escapeHtml(result.reason)}</p>
+                    </div>
+                    
+                    ${result.categories.length > 0 ? `
+                    <div class="flex flex-wrap gap-2">
+                        ${result.categories.map(cat => `
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 capitalize">
+                                ${escapeHtml(cat.replace(/_/g, ' '))}
+                            </span>
+                        `).join('')}
+                    </div>
+                    ` : ''}
+                `;
+
+                resultsList.appendChild(card);
+            });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function resetApp() {
+            resultsState.classList.add('hidden');
+            form.classList.remove('hidden');
+            fileInput.value = '';
+            dropZone.classList.remove('has-file');
+            fileText.textContent = 'Drag & drop your CSV here or click to browse';
+            currentResults = [];
+            progressBar.style.width = '0%';
+            progressText.textContent = '';
+        }
+    </script>
+</body>
+</html>
 
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
