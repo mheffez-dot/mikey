@@ -23,7 +23,6 @@ export default {
       try {
         const formData = await request.formData();
         const csvFile = formData.get('domains_csv');
-        const email = formData.get('email') || 'admin@example.com';
 
         if (!csvFile) {
           return new Response(JSON.stringify({ error: 'No CSV file provided' }), {
@@ -40,9 +39,6 @@ export default {
           const result = await validateDomain(domain, env);
           results.push(result);
         }
-
-        // Send email with results
-        await sendEmail(email, results, env);
 
         return new Response(JSON.stringify({ results }), {
           headers: {
@@ -317,57 +313,4 @@ function fallbackClassification(extracted, domain) {
     evidence: [],
     reason: 'Classification based on keyword analysis (AI fallback)',
   };
-}
-
-async function sendEmail(email, results, env) {
-  const passCount = results.filter(r => r.verdict === 'Pass').length;
-  const failCount = results.filter(r => r.verdict === 'Fail').length;
-  const mixedCount = results.filter(r => r.verdict === 'Mixed').length;
-
-  // Build email body with detailed results
-  let emailBody = `CPS Vendor Validation Results\n`;
-  emailBody += `================================\n\n`;
-  emailBody += `Total domains processed: ${results.length}\n`;
-  emailBody += `Pass: ${passCount}\n`;
-  emailBody += `Fail: ${failCount}\n`;
-  emailBody += `Mixed: ${mixedCount}\n\n`;
-  emailBody += `Detailed Results:\n`;
-  emailBody += `-----------------\n\n`;
-
-  for (const result of results) {
-    emailBody += `Domain: ${result.domain}\n`;
-    emailBody += `Verdict: ${result.verdict}\n`;
-    emailBody += `Confidence: ${result.confidence}%\n`;
-    emailBody += `Category: ${result.category}\n`;
-    emailBody += `Reason: ${result.reason}\n`;
-    if (result.evidence && result.evidence.length > 0) {
-      emailBody += `Evidence: ${result.evidence.join(', ')}\n`;
-    }
-    emailBody += `\n`;
-  }
-
-  try {
-    // Use Cloudflare Workers Email API or external service
-    // For now, using a simple fetch to an email service endpoint
-    // In production, configure your preferred email service
-    
-    if (env.EMAIL_SERVICE_URL) {
-      await fetch(env.EMAIL_SERVICE_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${env.EMAIL_API_KEY}`,
-        },
-        body: JSON.stringify({
-          to: email,
-          subject: `CPS Vendor Validation Results - ${new Date().toISOString().split('T')[0]}`,
-          body: emailBody,
-        }),
-      });
-    } else {
-      console.log(`Email would be sent to ${email} with results:`, emailBody);
-    }
-  } catch (error) {
-    console.error('Failed to send email:', error);
-  }
 }
