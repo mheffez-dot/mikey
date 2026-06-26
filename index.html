@@ -391,6 +391,11 @@
                     </div>
                 </div>
                 
+                <div class="file-upload-wrapper">
+                    <label class="file-upload-label" for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="your@email.com" style="width: 100%; padding: 0.75rem; border: 2px dashed var(--border-color); border-radius: 8px; background: var(--cps-light-blue); font-size: 1rem;" required>
+                </div>
+                
                 <button type="submit" class="btn-submit">Start Validation</button>
             </form>
         </div>
@@ -446,8 +451,8 @@
                         <svg style="width: 80px; height: 80px; fill: #005696; margin-bottom: 1.5rem;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                         </svg>
-                        <h1 style="color: #005696; margin-bottom: 1rem;">Validation Complete!</h1>
-                        <p style="color: #555555; font-size: 1rem; margin-bottom: 1.5rem;">Processed ${result.results.length} domain(s)</p>
+                        <h1 style="color: #005696; margin-bottom: 1rem;">Form Submitted</h1>
+                        <p style="color: #555555; font-size: 1rem; margin-bottom: 1.5rem;">Your validation request has been submitted successfully. Results will be sent to your email shortly.</p>
                         <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem;">
                             <div style="background: #e6f0f7; padding: 1rem; border-radius: 8px; text-align: center;">
                                 <div style="font-size: 1.5rem; font-weight: 700; color: #28a745;">${passCount}</div>
