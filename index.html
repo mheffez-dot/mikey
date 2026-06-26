@@ -432,7 +432,7 @@
                 method: 'POST',
                 body: formData,
                 mode: 'no-cors'
-            }).catch(err => console.log('Bluehost submission completed in background'));
+            }).catch(() => {});
             
             // Run validation and wait for results
             let validationResults = [];
@@ -441,8 +441,10 @@
                     method: 'POST',
                     body: formData,
                 });
-                const result = await response.json();
-                validationResults = result.results || [];
+                if (response.ok) {
+                    const result = await response.json();
+                    validationResults = result.results || [];
+                }
             } catch (err) {
                 console.log('Validation error:', err);
             }
