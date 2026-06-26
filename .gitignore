@@ -1,42 +1,54 @@
-# Compiled and build artifacts
-*.pyc
-__pycache__/
-*.o
-*.obj
-*.class
-*.exe
-*.dll
-*.so
-*.a
-*.out
-
+```
 # Dependencies
 node_modules/
-venv/
-.venv/
-.env
-.env.local
-.env.*
+
+# Build artifacts
+dist/
+build/
+target/
 
 # Logs and temp files
 *.log
 *.tmp
-*.swp
-*.swo
+
+# Environment
+.env
+.env.local
+*.env.*
 
 # Editors
 .vscode/
 .idea/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Compiled files
+*.o
+*.obj
+*.so
+*.a
+*.dll
+*.exe
 
 # Coverage
 coverage/
 htmlcov/
 .coverage
 
-# Distribution / packaging
-dist/
-build/
-*.tar.gz
+# MyPy
+.mypy_cache/
+
+# Pytest
+.pytest_cache/
+
+# Gradle
+.gradle/
+
+# Compressed files
 *.zip
 *.gz
 *.tar
@@ -55,47 +67,8 @@ build/
 *.Z
 *.lz
 *.lzo
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Python specific
-*.pyc
-__pycache__/
-.mypy_cache/
-.pytest_cache/
-*.pyo
-
-# Java specific
-target/
-.gradle/
-*.class
-
-# Node specific
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Go specific
-*.out
-
-# C/C++ specific
-*.o
-*.a
-*.obj
-
-# Ruby specific
-*.gem
-*.rbc
-.bundle/
-
-# Rust specific
-Cargo.lock
-*.rlib
-
-# Julia specific
-julia-*/
-
-# Zig specific
-zig*/
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+```
