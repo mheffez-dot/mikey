@@ -404,6 +404,8 @@
         const fileInput = document.getElementById('domains_csv');
         const dropZone = document.getElementById('dropZone');
         const fileText = dropZone.querySelector('.file-text');
+        const form = document.querySelector('form');
+        const card = document.querySelector('.card');
 
         fileInput.addEventListener('change', function() {
             if (this.files && this.files[0]) {
@@ -413,6 +415,19 @@
                 dropZone.classList.remove('has-file');
                 fileText.textContent = 'Drag & drop your CSV here or click to browse';
             }
+        });
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show success message
+            card.innerHTML = `
+                <svg style="width: 80px; height: 80px; fill: #005696; margin-bottom: 1.5rem;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <h1 style="color: #005696; margin-bottom: 1rem;">Form Submitted</h1>
+                <p style="color: #555555; font-size: 1rem;">Thank you! Your CSV file has been submitted for validation.</p>
+            `;
         });
     </script>
 </body>
