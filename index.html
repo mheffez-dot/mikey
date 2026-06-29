@@ -10,22 +10,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         :root {
-            --cps-navy: #0B3C5D;
-            --cps-navy-dark: #072a42;
-            --cps-navy-light: #1a5f8a;
-            --cps-gold: #D4AF37;
-            --cps-gold-light: #f4e5b8;
-            --cps-white: #ffffff;
-            --cps-gray-bg: #f8f9fa;
-            --cps-gray-border: #e9ecef;
-            --cps-text-dark: #212529;
-            --cps-text-gray: #6c757d;
-            --cps-success-bg: #d1e7dd;
-            --cps-success-text: #0f5132;
-            --cps-danger-bg: #f8d7da;
-            --cps-danger-text: #842029;
-            --cps-warning-bg: #fff3cd;
-            --cps-warning-text: #664d03;
+            --primary-blue: #0066cc;
+            --primary-blue-dark: #0052a3;
+            --secondary-teal: #4ad3e1;
+            --dark-contrast: #111116;
+            --white: #ffffff;
+            --gray-light: #f5f7fa;
+            --gray-border: #e2e8f0;
+            --text-dark: #1a1a1a;
+            --text-gray: #64748b;
+            --success-bg: #dcfce7;
+            --success-text: #166534;
+            --danger-bg: #fee2e2;
+            --danger-text: #991b1b;
+            --warning-bg: #fef3c7;
+            --warning-text: #92400e;
             --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
@@ -37,8 +36,8 @@
 
         body {
             font-family: var(--font-primary);
-            background: var(--cps-gray-bg);
-            color: var(--cps-text-dark);
+            background: var(--white);
+            color: var(--text-dark);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -47,135 +46,180 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        header {
-            background: var(--cps-navy);
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--dark-contrast) 0%, #1a1a2e 100%);
             width: 100%;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .header-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 64px;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .logo-svg {
-            height: 40px;
-            width: auto;
-        }
-
-        .brand-text {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .brand-name {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--cps-white);
-            letter-spacing: 0.3px;
-        }
-
-        .portal-name {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--cps-gold);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-
-        .user-section {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-        }
-
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            background: var(--cps-gold);
-            border-radius: 50%;
+            min-height: 600px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--cps-navy);
-            font-weight: 700;
-            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+            padding: 4rem 2rem;
         }
 
-        .user-info {
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=1920&h=1080&fit=crop') center/cover;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text {
+            color: var(--white);
+        }
+
+        .hero-logo {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 2rem;
         }
 
-        .user-status {
-            font-size: 0.75rem;
-            color: var(--cps-gold);
-            text-transform: uppercase;
+        .hero-logo svg {
+            height: 48px;
+            width: auto;
+        }
+
+        .hero-logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
             letter-spacing: 0.5px;
-            font-weight: 600;
         }
 
-        .user-role {
-            font-size: 0.85rem;
-            color: var(--cps-white);
+        .hero-headline {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+        }
+
+        .hero-headline span {
+            color: var(--primary-blue);
+        }
+
+        .hero-subtext {
+            font-size: 1.125rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 2rem;
+            font-family: var(--font-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+            background: var(--primary-blue);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.4);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 2rem;
+            font-family: var(--font-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+            background: transparent;
+            border: 2px solid var(--white);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background: var(--white);
+            color: var(--dark-contrast);
+            transform: translateY(-2px);
+        }
+
+        .trust-metrics {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .trust-icon {
+            width: 40px;
+            height: 40px;
+            fill: var(--white);
+        }
+
+        .trust-text {
+            font-size: 0.875rem;
             font-weight: 500;
         }
 
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem 1.5rem;
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
+        /* Form Card in Hero */
+        .hero-form-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 2.5rem;
+            position: relative;
         }
 
-        .card {
-            background: var(--cps-white);
-            border-radius: 8px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            border: 1px solid var(--cps-gray-border);
-            width: 100%;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        h1 {
+        .form-title {
             font-size: 1.5rem;
-            font-weight: 600;
-            font-family: var(--font-primary);
-            color: var(--cps-navy);
+            font-weight: 700;
+            color: var(--dark-contrast);
             margin-bottom: 0.5rem;
-            line-height: 1.3;
             text-align: center;
         }
 
-        .instructions {
+        .form-subtitle {
             font-size: 0.9rem;
-            color: var(--cps-text-gray);
-            margin-bottom: 1.5rem;
-            font-weight: 400;
+            color: var(--text-gray);
+            margin-bottom: 2rem;
             text-align: center;
         }
 
@@ -193,7 +237,7 @@
             display: block;
             font-size: 0.75rem;
             font-weight: 600;
-            color: var(--cps-navy);
+            color: var(--primary-blue);
             margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.8px;
@@ -201,42 +245,43 @@
 
         .file-input-container {
             position: relative;
-            border: 2px dashed var(--cps-gray-border);
-            border-radius: 6px;
-            padding: 1.5rem;
-            background: var(--cps-white);
-            transition: all 0.2s ease;
+            border: 2px dashed var(--gray-border);
+            border-radius: 12px;
+            padding: 2rem;
+            background: var(--gray-light);
+            transition: all 0.3s ease;
             cursor: pointer;
+            text-align: center;
         }
 
         .file-input-container:hover {
-            border-color: var(--cps-navy);
-            background: var(--cps-gray-bg);
+            border-color: var(--primary-blue);
+            background: rgba(0, 102, 204, 0.05);
         }
 
         .file-input-container.has-file {
-            border-color: var(--cps-navy);
-            background: var(--cps-gray-bg);
+            border-color: var(--primary-blue);
+            background: rgba(0, 102, 204, 0.08);
             border-style: solid;
         }
 
         .file-icon {
-            width: 40px;
-            height: 40px;
-            margin: 0 auto 0.75rem;
-            fill: var(--cps-navy);
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            fill: var(--primary-blue);
         }
 
         .file-text {
-            font-size: 0.9rem;
-            color: var(--cps-text-dark);
-            font-weight: 500;
-            margin-bottom: 0.25rem;
+            font-size: 1rem;
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
         }
 
         .file-hint {
             font-size: 0.8rem;
-            color: var(--cps-text-gray);
+            color: var(--text-gray);
         }
 
         input[type="file"] {
@@ -254,169 +299,205 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            padding: 0.625rem 1.5rem;
+            padding: 1rem 2rem;
             font-family: var(--font-primary);
-            font-size: 0.875rem;
+            font-size: 1rem;
             font-weight: 600;
-            color: var(--cps-white);
-            background: var(--cps-navy);
+            color: var(--white);
+            background: var(--primary-blue);
             border: none;
-            border-radius: 6px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .btn-submit:hover {
-            background: var(--cps-navy-dark);
+            background: var(--primary-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.4);
         }
 
         .btn-submit:disabled {
-            background: var(--cps-text-gray);
+            background: var(--text-gray);
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Results Section */
+        .results-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            width: 100%;
+        }
+
+        .results-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--gray-border);
+            padding: 2.5rem;
         }
 
         .results-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid var(--cps-gray-border);
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--gray-border);
         }
 
         .results-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--cps-navy);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-contrast);
         }
 
         .summary-stats {
             display: flex;
-            gap: 0.75rem;
+            gap: 1rem;
         }
 
         .stat-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
-            padding: 0.35rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
             font-weight: 600;
         }
 
         .stat-pass {
-            background: var(--cps-success-bg);
-            color: var(--cps-success-text);
+            background: var(--success-bg);
+            color: var(--success-text);
         }
 
         .stat-fail {
-            background: var(--cps-danger-bg);
-            color: var(--cps-danger-text);
+            background: var(--danger-bg);
+            color: var(--danger-text);
         }
 
         .stat-review {
-            background: var(--cps-warning-bg);
-            color: var(--cps-warning-text);
+            background: var(--warning-bg);
+            color: var(--warning-text);
         }
 
         .result-item {
-            padding: 1rem;
-            border: 1px solid var(--cps-gray-border);
-            border-radius: 6px;
-            margin-bottom: 0.75rem;
-            background: var(--cps-white);
+            padding: 1.5rem;
+            border: 1px solid var(--gray-border);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            background: var(--white);
+            transition: all 0.2s ease;
+        }
+
+        .result-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-color: var(--primary-blue);
         }
 
         .result-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
         }
 
         .result-vendor {
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 600;
-            color: var(--cps-navy);
+            color: var(--dark-contrast);
         }
 
         .result-url {
-            font-size: 0.75rem;
-            color: var(--cps-text-gray);
+            font-size: 0.8rem;
+            color: var(--text-gray);
             word-break: break-all;
+            margin-top: 0.25rem;
         }
 
         .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
-            padding: 0.25rem 0.625rem;
-            border-radius: 4px;
-            font-size: 0.7rem;
+            gap: 0.5rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
         }
 
         .status-pass {
-            background: var(--cps-success-bg);
-            color: var(--cps-success-text);
+            background: var(--success-bg);
+            color: var(--success-text);
         }
 
         .status-fail {
-            background: var(--cps-danger-bg);
-            color: var(--cps-danger-text);
+            background: var(--danger-bg);
+            color: var(--danger-text);
         }
 
         .status-review {
-            background: var(--cps-warning-bg);
-            color: var(--cps-warning-text);
+            background: var(--warning-bg);
+            color: var(--warning-text);
         }
 
         .result-reason {
-            font-size: 0.8rem;
-            color: var(--cps-text-dark);
-            line-height: 1.5;
+            font-size: 0.875rem;
+            color: var(--text-dark);
+            line-height: 1.6;
         }
 
         .result-categories {
-            margin-top: 0.5rem;
+            margin-top: 0.75rem;
             display: flex;
             flex-wrap: wrap;
-            gap: 0.35rem;
+            gap: 0.5rem;
         }
 
         .category-tag {
-            font-size: 0.65rem;
-            padding: 0.15rem 0.5rem;
-            border-radius: 3px;
-            font-weight: 500;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-weight: 600;
         }
 
         .cat-covered {
-            background: var(--cps-success-bg);
-            color: var(--cps-success-text);
+            background: var(--success-bg);
+            color: var(--success-text);
         }
 
         .cat-excluded {
-            background: var(--cps-danger-bg);
-            color: var(--cps-danger-text);
+            background: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        /* Progress Section */
+        .progress-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 3rem;
+            text-align: center;
         }
 
         .progress-container {
             text-align: center;
-            padding: 1.5rem;
+            padding: 2rem;
         }
 
         .spinner {
-            width: 32px;
-            height: 32px;
-            border: 3px solid var(--cps-gray-border);
-            border-top-color: var(--cps-navy);
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--gray-border);
+            border-top-color: var(--primary-blue);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
+            margin: 0 auto 1.5rem;
         }
 
         @keyframes spin {
@@ -424,105 +505,411 @@
         }
 
         .progress-text {
-            font-size: 0.85rem;
-            color: var(--cps-text-gray);
+            font-size: 1rem;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        /* Grid Feature Section */
+        .grid-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            width: 100%;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 300px);
+            gap: 1.5rem;
+        }
+
+        .grid-item {
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .grid-item-large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .grid-item-wide {
+            grid-column: span 2;
+        }
+
+        .grid-item-blue {
+            background: var(--primary-blue);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .grid-item-teal {
+            background: var(--secondary-teal);
+            color: var(--dark-contrast);
+            text-align: left;
+            padding: 2.5rem;
+        }
+
+        .grid-item-image {
+            position: relative;
+        }
+
+        .grid-item-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+        }
+
+        .grid-content {
+            position: relative;
+            z-index: 1;
+            color: var(--white);
+        }
+
+        .grid-blue-content h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .grid-blue-content p {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .grid-teal-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark-contrast);
+        }
+
+        .grid-teal-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .grid-teal-list li {
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .grid-teal-list li::before {
+            content: '✓';
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: var(--dark-contrast);
+            color: var(--secondary-teal);
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* Trust Badge */
+        .trust-badge {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1000;
+            border: 1px solid var(--gray-border);
+        }
+
+        .trust-badge-stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .trust-badge-star {
+            width: 18px;
+            height: 18px;
+            fill: #ffc107;
+        }
+
+        .trust-badge-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .trust-badge-rating {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--dark-contrast);
+        }
+
+        .trust-badge-source {
+            font-size: 0.7rem;
+            color: var(--text-gray);
         }
 
         footer {
             text-align: center;
-            padding: 1rem;
-            color: var(--cps-text-gray);
-            font-size: 0.8rem;
-            border-top: 1px solid var(--cps-gray-border);
-            background: var(--cps-white);
+            padding: 2rem;
+            color: var(--text-gray);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--gray-border);
+            background: var(--gray-light);
             margin-top: auto;
         }
 
-        @media (max-width: 600px) {
-            .header-container {
-                padding: 0 1rem;
+        @media (max-width: 1200px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
             }
 
-            .brand-name {
-                font-size: 1rem;
+            .hero-text {
+                text-align: center;
             }
 
-            .card {
-                padding: 1.5rem;
+            .hero-headline {
+                font-size: 2.5rem;
             }
 
-            h1 {
-                font-size: 1.25rem;
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .trust-metrics {
+                justify-content: center;
+            }
+
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(4, 250px);
+            }
+
+            .grid-item-large {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+
+            .grid-item-wide {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 3rem 1.5rem;
+                min-height: auto;
+            }
+
+            .hero-headline {
+                font-size: 2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .trust-metrics {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(8, 200px);
+            }
+
+            .grid-item-large,
+            .grid-item-wide {
+                grid-column: span 1;
+            }
+
+            .trust-badge {
+                bottom: 1rem;
+                left: 1rem;
+                right: 1rem;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-container">
-            <div class="logo-section">
-                <svg class="logo-svg" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M25 2L6 10V22C6 36.5 14.5 48.5 25 50C35.5 48.5 44 36.5 44 22V10L25 2Z" fill="#D4AF37"/>
-                    <path d="M25 6L10 12.5V22C10 34 17 44 25 45.5C33 44 40 34 40 22V12.5L25 6Z" fill="#0B3C5D"/>
-                    <path d="M22 32L16 26L18.5 23.5L22 27L31.5 17.5L34 20L22 32Z" fill="#D4AF37"/>
-                </svg>
-                <div class="brand-text">
-                    <span class="brand-name">Consumer Priority Service</span>
-                    <span class="portal-name">Vendor Validator Portal</span>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="hero-logo">
+                    <svg viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M25 2L6 10V22C6 36.5 14.5 48.5 25 50C35.5 48.5 44 36.5 44 22V10L25 2Z" fill="#D4AF37"/>
+                        <path d="M25 6L10 12.5V22C10 34 17 44 25 45.5C33 44 40 34 40 22V12.5L25 6Z" fill="#0B3C5D"/>
+                        <path d="M22 32L16 26L18.5 23.5L22 27L31.5 17.5L34 20L22 32Z" fill="#D4AF37"/>
+                    </svg>
+                    <span class="hero-logo-text">Consumer Priority Service</span>
                 </div>
-            </div>
-            <div class="user-section">
-                <div class="user-avatar">A</div>
-                <div class="user-info">
-                    <span class="user-status">Logged in as</span>
-                    <span class="user-role">Admin</span>
+                <h1 class="hero-headline">Premium <span>Product Protection</span> for Modern Living</h1>
+                <p class="hero-subtext">Validate vendor coverage eligibility with our advanced verification system. Trusted by leading retailers nationwide.</p>
+                <div class="hero-buttons">
+                    <a href="#uploadCard" class="btn-primary">Get Started</a>
+                    <a href="#gridSection" class="btn-secondary">Learn More</a>
                 </div>
-            </div>
-        </div>
-    </header>
-
-    <main>
-        <div class="card" id="uploadCard">
-            <h1>Validate Vendor Coverage</h1>
-            <p class="instructions">Upload a CSV file containing vendor domains to verify CPS coverage eligibility.</p>
-            
-            <form id="validatorForm">
-                <div class="file-upload-wrapper">
-                    <label class="file-upload-label">CSV File</label>
-                    <div class="file-input-container" id="dropZone">
-                        <svg class="file-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM16 18H8V16H16V18ZM16 14H8V12H16V14ZM13 9V3.5L18.5 9H13Z"/>
+                <div class="trust-metrics">
+                    <div class="trust-item">
+                        <svg class="trust-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                         </svg>
-                        <p class="file-text" id="fileName">Drop CSV here or click to browse</p>
-                        <p class="file-hint">Columns: domain, website, URL, or vendor_name</p>
-                        <input type="file" id="csvFile" accept=".csv" />
+                        <span class="trust-text">Millions Protected</span>
+                    </div>
+                    <div class="trust-item">
+                        <svg class="trust-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        <span class="trust-text">Nationwide Coverage</span>
+                    </div>
+                    <div class="trust-item">
+                        <svg class="trust-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                        </svg>
+                        <span class="trust-text">US-Based Support</span>
                     </div>
                 </div>
+            </div>
+            <div class="hero-form-card" id="uploadCard">
+                <h2 class="form-title">Validate Vendor Coverage</h2>
+                <p class="form-subtitle">Upload a CSV file containing vendor domains to verify CPS coverage eligibility.</p>
                 
-                <button type="submit" class="btn-submit" id="submitBtn" disabled>
-                    Validate Vendors
-                </button>
-            </form>
-        </div>
-
-        <div class="card" id="progressCard" style="display: none;">
-            <div class="progress-container">
-                <div class="spinner"></div>
-                <p class="progress-text" id="progressText">Analyzing vendors... 0 / 0</p>
+                <form id="validatorForm">
+                    <div class="file-upload-wrapper">
+                        <label class="file-upload-label">CSV File</label>
+                        <div class="file-input-container" id="dropZone">
+                            <svg class="file-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM16 18H8V16H16V18ZM16 14H8V12H16V14ZM13 9V3.5L18.5 9H13Z"/>
+                            </svg>
+                            <p class="file-text" id="fileName">Drop CSV here or click to browse</p>
+                            <p class="file-hint">Columns: domain, website, URL, or vendor_name</p>
+                            <input type="file" id="csvFile" accept=".csv" />
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit" id="submitBtn" disabled>
+                        Validate Vendors
+                    </button>
+                </form>
             </div>
         </div>
+    </section>
 
-        <div class="card" id="resultsCard" style="display: none;">
+    <!-- Grid Feature Section -->
+    <section class="grid-section" id="gridSection">
+        <div class="feature-grid">
+            <div class="grid-item grid-item-large grid-item-image" style="background-image: url('https://images.unsplash.com/photo-1556910103-1c7b7a3f4c7e?w=800&h=600&fit=crop');">
+                <div class="grid-content">
+                    <h3>Complete Peace of Mind</h3>
+                </div>
+            </div>
+            <div class="grid-item grid-item-blue">
+                <div class="grid-blue-content">
+                    <h3>Product Protection included</h3>
+                    <p>POWERED BY CPS</p>
+                </div>
+            </div>
+            <div class="grid-item grid-item-image" style="background-image: url('https://images.unsplash.com/photo-1593642632823-8f78536788c6?w=400&h=300&fit=crop');">
+                <div class="grid-content">
+                    <h3>Electronics</h3>
+                </div>
+            </div>
+            <div class="grid-item grid-item-teal">
+                <div class="grid-teal-content">
+                    <h3>Comprehensive Coverage</h3>
+                    <ul class="grid-teal-list">
+                        <li>Extended Warranty Plans</li>
+                        <li>Appliance Protection</li>
+                        <li>Electronics Protection</li>
+                        <li>Accidental Damage</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="grid-item grid-item-image" style="background-image: url('https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=400&h=300&fit=crop');">
+                <div class="grid-content">
+                    <h3>Home & Garden</h3>
+                </div>
+            </div>
+            <div class="grid-item grid-item-wide grid-item-image" style="background-image: url('https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&h=300&fit=crop');">
+                <div class="grid-content">
+                    <h3>Laptops & Computers</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Progress Card -->
+    <div class="progress-card" id="progressCard" style="display: none;">
+        <div class="progress-container">
+            <div class="spinner"></div>
+            <p class="progress-text" id="progressText">Analyzing vendors... 0 / 0</p>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <section class="results-section" id="resultsCard" style="display: none;">
+        <div class="results-card">
             <div class="results-header">
                 <span class="results-title">Validation Results</span>
                 <div class="summary-stats" id="summaryStats"></div>
             </div>
             <div id="resultsList"></div>
-            <button class="btn-submit" onclick="resetValidator()" style="margin-top: 1rem;">
+            <button class="btn-submit" onclick="resetValidator()" style="margin-top: 1.5rem;">
                 Validate Another File
             </button>
         </div>
-    </main>
+    </section>
+
+    <!-- Trust Badge -->
+    <div class="trust-badge">
+        <div class="trust-badge-stars">
+            <svg class="trust-badge-star" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            </svg>
+            <svg class="trust-badge-star" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            </svg>
+            <svg class="trust-badge-star" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            </svg>
+            <svg class="trust-badge-star" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            </svg>
+            <svg class="trust-badge-star" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            </svg>
+        </div>
+        <div class="trust-badge-text">
+            <span class="trust-badge-rating">4.7 stars</span>
+            <span class="trust-badge-source">on Google Reviews</span>
+        </div>
+    </div>
 
     <footer>
         &copy; 2024 Consumer Priority Service. All rights reserved.
