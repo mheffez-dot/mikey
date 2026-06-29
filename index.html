@@ -583,28 +583,26 @@
             document.getElementById('uploadCard').style.display = 'none';
             document.getElementById('progressCard').style.display = 'block';
 
-            Papa.parse(selectedFile, {
-                header: true,
-                skipEmptyLines: true,
-                complete: async function(results) {
-                    const domains = extractDomains(results.data);
-                    if (domains.length === 0) {
-                        alert('No valid domains found in CSV');
-                        resetValidator();
-                        return;
-                    }
+            const formData = new FormData();
+            formData.append('domains_csv', selectedFile);
 
-                    const resultsData = [];
-                    for (let i = 0; i < domains.length; i += 20) {
-                        const batch = domains.slice(i, i + 20);
-                        const batchResults = await Promise.all(batch.map(d => analyzeWebsite(d)));
-                        resultsData.push(...batchResults);
-                        updateProgress(i + batch.length, domains.length);
-                    }
+            try {
+                const response = await fetch('/validate', {
+                    method: 'POST',
+                    body: formData
+                });
 
-                    displayResults(resultsData);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Validation failed');
                 }
-            });
+
+                const data = await response.json();
+                displayResults(data.results);
+            } catch (error) {
+                alert('Error: ' + error.message);
+                resetValidator();
+            }
         }
 
         function extractDomains(data) {

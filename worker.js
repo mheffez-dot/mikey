@@ -111,18 +111,20 @@ async function validateDomain(domain, env) {
       redirect: 'follow',
     };
 
+    // Try HTTPS first
     try {
-      // Try HTTPS first
       const response = await fetch(url, fetchOptions);
       statusCode = response.status;
-      usedUrl = response.url; // Track final URL after redirects
+      usedUrl = response.url;
       if (statusCode === 200) {
         html = await response.text();
       }
     } catch (directError) {
       console.log(`Direct HTTPS fetch failed for ${domain}, trying HTTP`);
-      
-      // Try HTTP as fallback
+    }
+
+    // Try HTTP as fallback if HTTPS didn't work
+    if (!html || statusCode !== 200) {
       const httpUrl = `http://${domain}`;
       try {
         const response = await fetch(httpUrl, fetchOptions);
@@ -132,14 +134,13 @@ async function validateDomain(domain, env) {
           html = await response.text();
         }
       } catch (httpError) {
-        console.log(`Direct HTTP fetch also failed for ${domain}, trying Bright Data unblocker`);
+        console.log(`Direct HTTP fetch also failed for ${domain}`);
       }
     }
 
     // If direct fetch failed or returned non-200, try Bright Data Web Unblocker
     if (!html || statusCode !== 200) {
       try {
-        // Use Bright Data's SERP API or Proxy endpoint format
         const brightDataUrl = `https://api.brightdata.com/unblocker?url=${encodeURIComponent(url)}`;
         const response = await fetch(brightDataUrl, {
           headers: {
@@ -156,6 +157,19 @@ async function validateDomain(domain, env) {
       }
     }
 
+    // If we still don't have content, return review status
+    if (!html || statusCode !== 200) {
+      return {
+        domain,
+        verdict: 'Mixed',
+        confidence: 50,
+        category: 'Unable to fetch',
+        evidence: [],
+        reason: `Website unreachable (status: ${statusCode}). Manual review required.`,
+        extracted: { title: '', description: '', products: [] },
+      };
+    }
+
     // Step 2: Read & Classify - Extract content
     const extracted = extractContent(html);
 
@@ -165,25 +179,25 @@ async function validateDomain(domain, env) {
     // Step 3: Return Verdict
     return {
       domain,
-      verdict: classification.verdict, // 'Pass', 'Fail', or 'Mixed'
-      confidence: classification.confidence, // 0-100
+      verdict: classification.verdict,
+      confidence: classification.confidence,
       category: classification.category,
       evidence: classification.evidence,
       reason: classification.reason,
       extracted: {
         title: extracted.title,
         description: extracted.description,
-        products: extracted.products.slice(0, 10), // Limit products
+        products: extracted.products.slice(0, 10),
       },
     };
   } catch (error) {
     return {
       domain,
-      verdict: 'Fail',
-      confidence: 100,
-      category: 'Unknown',
+      verdict: 'Mixed',
+      confidence: 50,
+      category: 'Error',
       evidence: [],
-      reason: `Failed to validate: ${error.message}`,
+      reason: `Failed to validate: ${error.message}. Manual review required.`,
       extracted: { title: '', description: '', products: [] },
     };
   }
