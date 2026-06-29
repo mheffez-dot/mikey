@@ -6,27 +6,34 @@
     <title>CPS Central - Vendor Validator Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         :root {
-            --cps-navy: #0B3C5D;
-            --cps-navy-dark: #072a42;
-            --cps-navy-light: #1a5f8a;
+            --cps-blue: #0371c5;
+            --cps-blue-dark: #025a9e;
+            --cps-blue-light: #0a85e8;
             --cps-gold: #D4AF37;
-            --cps-gold-light: #f4e5b8;
             --cps-white: #ffffff;
-            --cps-gray-bg: #f8f9fa;
-            --cps-gray-border: #e9ecef;
-            --cps-text-dark: #212529;
-            --cps-text-gray: #6c757d;
+            --cps-gray-bg: #f5f8fe;
+            --cps-gray-light: #f1f1f1;
+            --cps-gray-border: #e0e0e0;
+            --cps-text-dark: #111111;
+            --cps-text-gray: #666666;
             --cps-success-bg: #d1e7dd;
             --cps-success-text: #0f5132;
             --cps-danger-bg: #f8d7da;
             --cps-danger-text: #842029;
             --cps-warning-bg: #fff3cd;
             --cps-warning-text: #664d03;
-            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Hind', sans-serif;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
         }
 
         * {
@@ -36,8 +43,8 @@
         }
 
         body {
-            font-family: var(--font-primary);
-            background: var(--cps-gray-bg);
+            font-family: var(--font-body);
+            background: linear-gradient(180deg, #ffffff 0%, #f5f8fe 100%);
             color: var(--cps-text-dark);
             min-height: 100vh;
             display: flex;
@@ -48,12 +55,13 @@
         }
 
         header {
-            background: var(--cps-navy);
+            background: var(--cps-white);
             width: 100%;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-sm);
+            border-bottom: 3px solid var(--cps-blue);
         }
 
         .header-container {
@@ -63,7 +71,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 64px;
+            height: 80px;
         }
 
         .logo-section {
@@ -73,7 +81,7 @@
         }
 
         .logo-svg {
-            height: 40px;
+            height: 48px;
             width: auto;
         }
 
@@ -84,18 +92,19 @@
         }
 
         .brand-name {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            color: var(--cps-white);
+            color: var(--cps-blue);
             letter-spacing: 0.3px;
+            font-family: var(--font-heading);
         }
 
         .portal-name {
             font-size: 0.85rem;
             font-weight: 500;
-            color: var(--cps-gold);
+            color: var(--cps-text-gray);
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 1px;
         }
 
         .user-section {
@@ -103,22 +112,22 @@
             align-items: center;
             gap: 12px;
             padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: var(--cps-gray-bg);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--cps-gray-border);
         }
 
         .user-avatar {
-            width: 32px;
-            height: 32px;
-            background: var(--cps-gold);
+            width: 36px;
+            height: 36px;
+            background: var(--cps-blue);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--cps-navy);
+            color: var(--cps-white);
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         .user-info {
@@ -127,17 +136,17 @@
         }
 
         .user-status {
-            font-size: 0.75rem;
-            color: var(--cps-gold);
+            font-size: 0.7rem;
+            color: var(--cps-text-gray);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .user-role {
-            font-size: 0.85rem;
-            color: var(--cps-white);
-            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--cps-text-dark);
+            font-weight: 600;
         }
 
         main {
@@ -145,38 +154,44 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 2rem 1.5rem;
+            padding: 3rem 1.5rem;
             width: 100%;
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
         .card {
             background: var(--cps-white);
-            border-radius: 8px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
             border: 1px solid var(--cps-gray-border);
             width: 100%;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
         }
 
         h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            font-family: var(--font-primary);
-            color: var(--cps-navy);
-            margin-bottom: 0.5rem;
+            font-size: 1.75rem;
+            font-weight: 700;
+            font-family: var(--font-heading);
+            color: var(--cps-blue);
+            margin-bottom: 0.75rem;
             line-height: 1.3;
             text-align: center;
         }
 
         .instructions {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--cps-text-gray);
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             font-weight: 400;
             text-align: center;
+            line-height: 1.7;
         }
 
         form {
@@ -193,49 +208,50 @@
             display: block;
             font-size: 0.75rem;
             font-weight: 600;
-            color: var(--cps-navy);
-            margin-bottom: 0.5rem;
+            color: var(--cps-blue);
+            margin-bottom: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 1px;
         }
 
         .file-input-container {
             position: relative;
             border: 2px dashed var(--cps-gray-border);
-            border-radius: 6px;
-            padding: 1.5rem;
-            background: var(--cps-white);
-            transition: all 0.2s ease;
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            background: var(--cps-gray-bg);
+            transition: all 0.3s ease;
             cursor: pointer;
         }
 
         .file-input-container:hover {
-            border-color: var(--cps-navy);
-            background: var(--cps-gray-bg);
+            border-color: var(--cps-blue);
+            background: var(--cps-white);
         }
 
         .file-input-container.has-file {
-            border-color: var(--cps-navy);
-            background: var(--cps-gray-bg);
+            border-color: var(--cps-blue);
+            background: var(--cps-white);
             border-style: solid;
+            box-shadow: var(--shadow-sm);
         }
 
         .file-icon {
-            width: 40px;
-            height: 40px;
-            margin: 0 auto 0.75rem;
-            fill: var(--cps-navy);
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            fill: var(--cps-blue);
         }
 
         .file-text {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--cps-text-dark);
-            font-weight: 500;
-            margin-bottom: 0.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
         }
 
         .file-hint {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--cps-text-gray);
         }
 
@@ -254,40 +270,46 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            padding: 0.625rem 1.5rem;
-            font-family: var(--font-primary);
-            font-size: 0.875rem;
+            padding: 0.875rem 2rem;
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--cps-white);
-            background: var(--cps-navy);
+            background: linear-gradient(135deg, var(--cps-blue) 0%, var(--cps-blue-dark) 100%);
             border: none;
-            border-radius: 6px;
+            border-radius: var(--radius-md);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
         }
 
         .btn-submit:hover {
-            background: var(--cps-navy-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            background: linear-gradient(135deg, var(--cps-blue-light) 0%, var(--cps-blue) 100%);
         }
 
         .btn-submit:disabled {
-            background: var(--cps-text-gray);
+            background: var(--cps-gray-light);
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .results-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid var(--cps-gray-border);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 2px solid var(--cps-gray-border);
         }
 
         .results-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--cps-navy);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--cps-blue);
+            font-family: var(--font-heading);
         }
 
         .summary-stats {
@@ -299,10 +321,11 @@
             display: inline-flex;
             align-items: center;
             gap: 0.35rem;
-            padding: 0.35rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
             font-weight: 600;
+            font-family: var(--font-heading);
         }
 
         .stat-pass {
@@ -321,42 +344,50 @@
         }
 
         .result-item {
-            padding: 1rem;
+            padding: 1.25rem;
             border: 1px solid var(--cps-gray-border);
-            border-radius: 6px;
-            margin-bottom: 0.75rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
             background: var(--cps-white);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .result-item:hover {
+            box-shadow: var(--shadow-sm);
         }
 
         .result-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
         }
 
         .result-vendor {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--cps-navy);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--cps-blue);
+            font-family: var(--font-heading);
         }
 
         .result-url {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--cps-text-gray);
             word-break: break-all;
+            margin-top: 0.25rem;
         }
 
         .status-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.35rem;
-            padding: 0.25rem 0.625rem;
-            border-radius: 4px;
-            font-size: 0.7rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
+            font-family: var(--font-heading);
         }
 
         .status-pass {
@@ -375,23 +406,24 @@
         }
 
         .result-reason {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--cps-text-dark);
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .result-categories {
-            margin-top: 0.5rem;
+            margin-top: 0.75rem;
             display: flex;
             flex-wrap: wrap;
-            gap: 0.35rem;
+            gap: 0.5rem;
         }
 
         .category-tag {
-            font-size: 0.65rem;
-            padding: 0.15rem 0.5rem;
-            border-radius: 3px;
-            font-weight: 500;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-family: var(--font-heading);
         }
 
         .cat-covered {
@@ -406,17 +438,17 @@
 
         .progress-container {
             text-align: center;
-            padding: 1.5rem;
+            padding: 2rem;
         }
 
         .spinner {
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             border: 3px solid var(--cps-gray-border);
-            border-top-color: var(--cps-navy);
+            border-top-color: var(--cps-blue);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
+            margin: 0 auto 1.5rem;
         }
 
         @keyframes spin {
@@ -424,15 +456,16 @@
         }
 
         .progress-text {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--cps-text-gray);
+            font-weight: 500;
         }
 
         footer {
             text-align: center;
-            padding: 1rem;
+            padding: 1.5rem;
             color: var(--cps-text-gray);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             border-top: 1px solid var(--cps-gray-border);
             background: var(--cps-white);
             margin-top: auto;
@@ -444,15 +477,19 @@
             }
 
             .brand-name {
-                font-size: 1rem;
+                font-size: 1.1rem;
             }
 
             .card {
-                padding: 1.5rem;
+                padding: 1.75rem;
             }
 
             h1 {
-                font-size: 1.25rem;
+                font-size: 1.4rem;
+            }
+
+            .logo-svg {
+                height: 40px;
             }
         }
     </style>
@@ -461,15 +498,10 @@
     <header>
         <div class="header-container">
             <div class="logo-section">
-                <svg class="logo-svg" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M25 2L6 10V22C6 36.5 14.5 48.5 25 50C35.5 48.5 44 36.5 44 22V10L25 2Z" fill="#D4AF37"/>
-                    <path d="M25 6L10 12.5V22C10 34 17 44 25 45.5C33 44 40 34 40 22V12.5L25 6Z" fill="#0B3C5D"/>
-                    <path d="M22 32L16 26L18.5 23.5L22 27L31.5 17.5L34 20L22 32Z" fill="#D4AF37"/>
+                <svg class="logo-svg" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <text x="0" y="42" font-family="Poppins, sans-serif" font-size="36" font-weight="700" fill="#0371c5">CPS</text>
+                    <text x="85" y="42" font-family="Poppins, sans-serif" font-size="28" font-weight="500" fill="#111111">Central</text>
                 </svg>
-                <div class="brand-text">
-                    <span class="brand-name">Consumer Priority Service</span>
-                    <span class="portal-name">Vendor Validator Portal</span>
-                </div>
             </div>
             <div class="user-section">
                 <div class="user-avatar">A</div>
