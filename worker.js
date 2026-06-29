@@ -38,18 +38,29 @@ export default {
         const batchSize = 20;
         const results = [];
         
-        console.log(`Starting validation of ${domains.length} domains in batches of ${batchSize}`);
+        console.log(`=== STARTING VALIDATION ===`);
+        console.log(`Total domains: ${domains.length}`);
+        console.log(`Batch size: ${batchSize}`);
+        console.log(`Expected batches: ${Math.ceil(domains.length / batchSize)}`);
         
         for (let i = 0; i < domains.length; i += batchSize) {
+          const batchNumber = Math.floor(i / batchSize) + 1;
           const batch = domains.slice(i, i + batchSize);
-          console.log(`Processing batch ${Math.floor(i / batchSize) + 1}: domains ${i + 1} to ${Math.min(i + batchSize, domains.length)}`);
+          const startIdx = i + 1;
+          const endIdx = Math.min(i + batchSize, domains.length);
+          
+          console.log(`\n>>> BATCH ${batchNumber}/${Math.ceil(domains.length / batchSize)}: Processing domains ${startIdx}-${endIdx} (${batch.length} domains)`);
+          console.log(`Domains in this batch: ${batch.join(', ')}`);
+          
           const batchPromises = batch.map(domain => validateDomain(domain, env));
           const batchResults = await Promise.all(batchPromises);
+          
+          console.log(`<<< BATCH ${batchNumber} COMPLETE: ${batchResults.length} results`);
           results.push(...batchResults);
-          console.log(`Completed batch ${Math.floor(i / batchSize) + 1}`);
         }
         
-        console.log(`Validation complete. Total results: ${results.length}`);
+        console.log(`\n=== VALIDATION COMPLETE ===`);
+        console.log(`Total results: ${results.length}`);
 
         return new Response(JSON.stringify({ results }), {
           headers: {
