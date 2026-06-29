@@ -34,10 +34,15 @@ export default {
         const csvText = await csvFile.text();
         const domains = parseCSV(csvText);
 
+        // Process domains in batches of 20
+        const batchSize = 20;
         const results = [];
-        for (const domain of domains) {
-          const result = await validateDomain(domain, env);
-          results.push(result);
+        
+        for (let i = 0; i < domains.length; i += batchSize) {
+          const batch = domains.slice(i, i + batchSize);
+          const batchPromises = batch.map(domain => validateDomain(domain, env));
+          const batchResults = await Promise.all(batchPromises);
+          results.push(...batchResults);
         }
 
         return new Response(JSON.stringify({ results }), {
