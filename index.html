@@ -615,23 +615,37 @@
             document.getElementById('uploadCard').style.display = 'none';
             document.getElementById('progressCard').style.display = 'block';
 
-            const formData = new FormData();
-            formData.append('domains_csv', selectedFile);
-
             try {
-                const response = await fetch('/validate', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Validation failed');
+                // Parse CSV client-side using PapaParse
+                const csvText = await selectedFile.text();
+                const parseResult = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+                
+                if (parseResult.errors.length > 0 && parseResult.data.length === 0) {
+                    throw new Error('Invalid CSV format: ' + parseResult.errors[0].message);
                 }
 
-                const data = await response.json();
-                displayResults(data.results);
+                const domains = extractDomains(parseResult.data);
+                
+                if (domains.length === 0) {
+                    throw new Error('No valid domains found in CSV. Ensure columns include: domain, website, URL, or vendor_name');
+                }
+
+                // Process vendors client-side
+                const results = [];
+                for (let i = 0; i < domains.length; i++) {
+                    updateProgress(i + 1, domains.length);
+                    const result = await analyzeWebsite(domains[i]);
+                    results.push(result);
+                    
+                    // Add small delay to avoid overwhelming requests
+                    if (i < domains.length - 1) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+                }
+
+                displayResults(results);
             } catch (error) {
+                console.error('Processing error:', error);
                 alert('Error: ' + error.message);
                 resetValidator();
             }
@@ -664,12 +678,41 @@
         async function analyzeWebsite(domainObj) {
             const { url, name } = domainObj;
             try {
-                const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`);
-                if (!response.ok) throw new Error('Site unreachable');
+                // Use allorigins proxy to bypass CORS restrictions
+                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
                 
+                const response = await fetch(proxyUrl);
+                
+                // Defensive check: verify response is OK
+                if (!response.ok) {
+                    throw new Error(`Site unreachable (HTTP ${response.status})`);
+                }
+                
+                // Check Content-Type header to ensure we're getting HTML/text, not JSON error
+                const contentType = response.headers.get('content-type') || '';
+                
+                // Get the response as text first (we expect HTML content)
                 const html = await response.text();
+                
+                // Defensive check: if response looks like an HTML error page instead of actual website content
+                if (html.trim().startsWith('<!DOCTYPE html>') || html.trim().startsWith('<html')) {
+                    // Check if it's an error page by looking for common error indicators
+                    const lowerHtml = html.toLowerCase();
+                    if (lowerHtml.includes('404') || lowerHtml.includes('not found') || 
+                        lowerHtml.includes('error') || lowerHtml.includes('unreachable')) {
+                        throw new Error('Website returned error page');
+                    }
+                }
+                
+                // Parse the HTML content
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
+                
+                // Check for parser errors (malformed HTML)
+                const parserError = doc.querySelector('parsererror');
+                if (parserError) {
+                    console.warn('HTML parsing warning for:', url);
+                }
                 
                 const title = doc.querySelector('title')?.innerText || '';
                 const metaDesc = doc.querySelector('meta[name="description"]')?.content || '';
@@ -718,6 +761,7 @@
                     excluded: [...new Set(excludedMatches)] 
                 };
             } catch (error) {
+                console.error(`Analysis failed for ${name} (${url}):`, error.message);
                 return { 
                     name,
                     url, 
