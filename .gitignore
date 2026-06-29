@@ -1,3 +1,1 @@
-(worker.js is a source file, so no additional ignores are needed based on the modified file alone, and there are no build artifacts, dependencies, or temp files in the changes)
-
-(empty)
+(worker.js is a source file, and there are no build artifacts, dependencies, or temp files in the changes)
