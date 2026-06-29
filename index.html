@@ -678,29 +678,88 @@
         async function analyzeWebsite(domainObj) {
             const { url, name } = domainObj;
             try {
-                // Use allorigins proxy to bypass CORS restrictions
-                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+                // Try multiple CORS proxies in order of preference
+                // Using 'get' endpoint which returns JSON with contents property
+                const proxies = [
+                    `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+                    `https://corsproxy.io/?${encodeURIComponent(url)}`,
+                    `https://thingproxy.freeboard.io/fetch/${url}`
+                ];
                 
-                const response = await fetch(proxyUrl);
+                let html = null;
+                let lastError = null;
                 
-                // Defensive check: verify response is OK
-                if (!response.ok) {
-                    throw new Error(`Site unreachable (HTTP ${response.status})`);
-                }
-                
-                // Check Content-Type header to ensure we're getting HTML/text, not JSON error
-                const contentType = response.headers.get('content-type') || '';
-                
-                // Get the response as text first (we expect HTML content)
-                const html = await response.text();
-                
-                // Defensive check: if response looks like an HTML error page instead of actual website content
-                if (html.trim().startsWith('<!DOCTYPE html>') || html.trim().startsWith('<html')) {
-                    // Check if it's an error page by looking for common error indicators
-                    const lowerHtml = html.toLowerCase();
-                    if (lowerHtml.includes('404') || lowerHtml.includes('not found') || 
-                        lowerHtml.includes('error') || lowerHtml.includes('unreachable')) {
-                        throw new Error('Website returned error page');
+                for (let i = 0; i < proxies.length; i++) {
+                    const proxyUrl = proxies[i];
+                    console.log(`Attempt ${i + 1}: Fetching ${url} via proxy: ${proxyUrl}`);
+                    
+                    try {
+                        const response = await fetch(proxyUrl, { 
+                            signal: AbortSignal.timeout(10000) // 10 second timeout
+                        });
+                        
+                        // Defensive check: verify response is OK
+                        if (!response.ok) {
+                            throw new Error(`Proxy returned HTTP ${response.status}`);
+                        }
+                        
+                        // Check Content-Type header
+                        const contentType = response.headers.get('content-type') || '';
+                        console.log(`Content-Type: ${contentType}`);
+                        
+                        // For allorigins.win (returns JSON)
+                        if (proxyUrl.includes('allorigins.win')) {
+                            if (!contentType.includes('application/json')) {
+                                const rawText = await response.text();
+                                console.warn(`AllOrigins returned non-JSON. Preview: ${rawText.substring(0, 200)}`);
+                                throw new Error(`AllOrigins returned unexpected content type: ${contentType}`);
+                            }
+                            
+                            const proxyData = await response.json();
+                            
+                            // Check if the proxy encountered an error
+                            if (proxyData.status && proxyData.status.http_code !== 200) {
+                                throw new Error(`Site unreachable (HTTP ${proxyData.status.http_code})`);
+                            }
+                            
+                            html = proxyData.contents || '';
+                        } 
+                        // For corsproxy.io and thingproxy (returns raw HTML)
+                        else {
+                            html = await response.text();
+                        }
+                        
+                        // Validate we got actual content
+                        if (html && html.trim().length > 0) {
+                            // Check if it's an error page
+                            const trimmedHtml = html.trim();
+                            const lowerHtml = html.toLowerCase();
+                            
+                            if (trimmedHtml.startsWith('<!DOCTYPE html>') || trimmedHtml.startsWith('<html') || trimmedHtml.startsWith('<HTML')) {
+                                if (lowerHtml.includes('404') || lowerHtml.includes('not found') || 
+                                    lowerHtml.includes('500') || lowerHtml.includes('internal server error') ||
+                                    lowerHtml.includes('522') || lowerHtml.includes('connection timed out') ||
+                                    lowerHtml.includes('503') || lowerHtml.includes('service unavailable')) {
+                                    throw new Error('Website returned error page');
+                                }
+                            }
+                            
+                            // Success - we have valid HTML content
+                            console.log(`Successfully fetched content from ${url} via proxy ${i + 1}`);
+                            break;
+                        } else {
+                            throw new Error('Website returned empty content');
+                        }
+                        
+                    } catch (proxyError) {
+                        lastError = proxyError;
+                        console.warn(`Proxy ${i + 1} failed for ${url}:`, proxyError.message);
+                        // Continue to next proxy
+                        if (i < proxies.length - 1) {
+                            continue;
+                        }
+                        // If this was the last proxy, throw the error
+                        throw lastError;
                     }
                 }
                 
