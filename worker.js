@@ -47,11 +47,20 @@ export default {
           },
         });
       } catch (error) {
+        console.error('Validation error:', error);
         return new Response(JSON.stringify({ error: error.message }), {
           status: 500,
           headers: { 'Content-Type': 'application/json' },
         });
       }
+    }
+
+    // Return 404 for any other routes with proper JSON error
+    if (request.method === 'POST') {
+      return new Response(JSON.stringify({ error: `Endpoint not found: ${url.pathname}` }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     return env.ASSETS.fetch(request);
@@ -292,14 +301,29 @@ Verdict guidelines:
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('DeepSeek API error response:', errorText);
       throw new Error(`DeepSeek API error: ${response.status}`);
     }
 
     const data = await response.json();
+    
+    // Defensive check: ensure response has expected structure
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      console.error('Unexpected DeepSeek API response format:', JSON.stringify(data));
+      throw new Error('Invalid AI response format');
+    }
+    
     const content = data.choices[0].message.content;
 
-    // Parse the JSON response
-    const classification = JSON.parse(content);
+    // Parse the JSON response with error handling
+    let classification;
+    try {
+      classification = JSON.parse(content);
+    } catch (parseError) {
+      console.error('Failed to parse AI response as JSON:', content);
+      throw new Error('AI returned invalid JSON');
+    }
 
     return {
       verdict: classification.verdict || 'Fail',
