@@ -38,12 +38,18 @@ export default {
         const batchSize = 20;
         const results = [];
         
+        console.log(`Starting validation of ${domains.length} domains in batches of ${batchSize}`);
+        
         for (let i = 0; i < domains.length; i += batchSize) {
           const batch = domains.slice(i, i + batchSize);
+          console.log(`Processing batch ${Math.floor(i / batchSize) + 1}: domains ${i + 1} to ${Math.min(i + batchSize, domains.length)}`);
           const batchPromises = batch.map(domain => validateDomain(domain, env));
           const batchResults = await Promise.all(batchPromises);
           results.push(...batchResults);
+          console.log(`Completed batch ${Math.floor(i / batchSize) + 1}`);
         }
+        
+        console.log(`Validation complete. Total results: ${results.length}`);
 
         return new Response(JSON.stringify({ results }), {
           headers: {
