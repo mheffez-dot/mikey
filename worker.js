@@ -97,30 +97,50 @@ async function validateDomain(domain, env) {
   const url = domain.startsWith('http') ? domain : `https://${domain}`;
 
   try {
-    // Step 1: Fetch Website - Direct fetch first
+    // Step 1: Fetch Website - Try HTTPS first, then HTTP as fallback
     let html = '';
     let statusCode = 0;
+    let usedUrl = url;
+
+    const fetchOptions = {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+      },
+      redirect: 'follow',
+    };
 
     try {
-      const response = await fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-          'Accept-Language': 'en-US,en;q=0.5',
-        },
-      });
+      // Try HTTPS first
+      const response = await fetch(url, fetchOptions);
       statusCode = response.status;
+      usedUrl = response.url; // Track final URL after redirects
       if (statusCode === 200) {
         html = await response.text();
       }
     } catch (directError) {
-      console.log(`Direct fetch failed for ${domain}, trying Bright Data unblocker`);
+      console.log(`Direct HTTPS fetch failed for ${domain}, trying HTTP`);
+      
+      // Try HTTP as fallback
+      const httpUrl = `http://${domain}`;
+      try {
+        const response = await fetch(httpUrl, fetchOptions);
+        statusCode = response.status;
+        usedUrl = response.url;
+        if (statusCode === 200) {
+          html = await response.text();
+        }
+      } catch (httpError) {
+        console.log(`Direct HTTP fetch also failed for ${domain}, trying Bright Data unblocker`);
+      }
     }
 
     // If direct fetch failed or returned non-200, try Bright Data Web Unblocker
     if (!html || statusCode !== 200) {
       try {
-        const brightDataUrl = `https://unblocker.brightdata.com/${url}`;
+        // Use Bright Data's SERP API or Proxy endpoint format
+        const brightDataUrl = `https://api.brightdata.com/unblocker?url=${encodeURIComponent(url)}`;
         const response = await fetch(brightDataUrl, {
           headers: {
             'Authorization': `Bearer ${env.BRIGHT_DATA_API_KEY}`,
@@ -129,9 +149,10 @@ async function validateDomain(domain, env) {
         });
         if (response.ok) {
           html = await response.text();
+          statusCode = response.status;
         }
       } catch (brightDataError) {
-        console.log(`Bright Data fetch also failed for ${domain}`);
+        console.log(`Bright Data fetch also failed for ${domain}: ${brightDataError.message}`);
       }
     }
 
