@@ -3,902 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CPS Central - Vendor Validator Portal</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind:wght@400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <title>CPS Vendor Validator</title>
     <style>
-        :root {
-            --cps-blue: #0371c5;
-            --cps-blue-dark: #025a9e;
-            --cps-blue-light: #0a85e8;
-            --cps-gold: #D4AF37;
-            --cps-white: #ffffff;
-            --cps-gray-bg: #f5f8fe;
-            --cps-gray-light: #f1f1f1;
-            --cps-gray-border: #e0e0e0;
-            --cps-text-dark: #111111;
-            --cps-text-gray: #666666;
-            --cps-success-bg: #d1e7dd;
-            --cps-success-text: #0f5132;
-            --cps-danger-bg: #f8d7da;
-            --cps-danger-text: #842029;
-            --cps-warning-bg: #fff3cd;
-            --cps-warning-text: #664d03;
-            --font-heading: 'Poppins', sans-serif;
-            --font-body: 'Hind', sans-serif;
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
-            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
-            --radius-sm: 6px;
-            --radius-md: 10px;
-            --radius-lg: 16px;
-        }
-
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: var(--font-body);
-            background: linear-gradient(180deg, #ffffff 0%, #f5f8fe 100%);
-            color: var(--cps-text-dark);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        header {
-            background: var(--cps-white);
-            width: 100%;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: var(--shadow-sm);
-            border-bottom: 3px solid var(--cps-blue);
-        }
-
-        .header-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 80px;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .logo-svg {
-            height: 48px;
-            width: auto;
-        }
-
-        .brand-text {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .brand-name {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--cps-blue);
-            letter-spacing: 0.3px;
-            font-family: var(--font-heading);
-        }
-
-        .portal-name {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--cps-text-gray);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .user-section {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 16px;
-            background: var(--cps-gray-bg);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--cps-gray-border);
-        }
-
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            background: var(--cps-blue);
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--cps-white);
-            font-weight: 700;
-            font-size: 0.95rem;
-        }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .user-status {
-            font-size: 0.7rem;
-            color: var(--cps-text-gray);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 500;
-        }
-
-        .user-role {
-            font-size: 0.9rem;
-            color: var(--cps-text-dark);
-            font-weight: 600;
-        }
-
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 3rem 1.5rem;
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
+            padding: 20px;
         }
 
         .card {
-            background: var(--cps-white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--cps-gray-border);
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 450px;
             width: 100%;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            transition: box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            box-shadow: var(--shadow-lg);
+            text-align: center;
         }
 
         h1 {
-            font-size: 1.75rem;
+            color: #1a1a2e;
+            font-size: 28px;
             font-weight: 700;
-            font-family: var(--font-heading);
-            color: var(--cps-blue);
-            margin-bottom: 0.75rem;
-            line-height: 1.3;
-            text-align: center;
+            margin-bottom: 12px;
         }
 
         .instructions {
-            font-size: 0.95rem;
-            color: var(--cps-text-gray);
-            margin-bottom: 2rem;
-            font-weight: 400;
-            text-align: center;
-            line-height: 1.7;
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 30px;
+            line-height: 1.5;
         }
 
-        form {
-            width: 100%;
-        }
-
-        .file-upload-wrapper {
-            position: relative;
-            margin-bottom: 1.5rem;
+        .form-group {
+            margin-bottom: 24px;
             text-align: left;
         }
 
-        .file-upload-label {
+        label {
             display: block;
-            font-size: 0.75rem;
+            color: #333;
             font-weight: 600;
-            color: var(--cps-blue);
-            margin-bottom: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .file-input-container {
-            position: relative;
-            border: 2px dashed var(--cps-gray-border);
-            border-radius: var(--radius-md);
-            padding: 2rem;
-            background: var(--cps-gray-bg);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .file-input-container:hover {
-            border-color: var(--cps-blue);
-            background: var(--cps-white);
-        }
-
-        .file-input-container.has-file {
-            border-color: var(--cps-blue);
-            background: var(--cps-white);
-            border-style: solid;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .file-icon {
-            width: 48px;
-            height: 48px;
-            margin: 0 auto 1rem;
-            fill: var(--cps-blue);
-        }
-
-        .file-text {
-            font-size: 0.95rem;
-            color: var(--cps-text-dark);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .file-hint {
-            font-size: 0.85rem;
-            color: var(--cps-text-gray);
+            margin-bottom: 8px;
+            font-size: 14px;
         }
 
         input[type="file"] {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            opacity: 0;
+            padding: 12px 16px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            background: #fafafa;
             cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        input[type="file"]:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        input[type="file"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .btn-submit {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
             width: 100%;
-            padding: 0.875rem 2rem;
-            font-family: var(--font-heading);
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--cps-white);
-            background: linear-gradient(135deg, var(--cps-blue) 0%, var(--cps-blue-dark) 100%);
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             border: none;
-            border-radius: var(--radius-md);
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: var(--shadow-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-            background: linear-gradient(135deg, var(--cps-blue-light) 0%, var(--cps-blue) 100%);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-submit:disabled {
-            background: var(--cps-gray-light);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        .btn-submit:active {
+            transform: translateY(0);
         }
 
-        .results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.25rem;
-            border-bottom: 2px solid var(--cps-gray-border);
-        }
-
-        .results-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--cps-blue);
-            font-family: var(--font-heading);
-        }
-
-        .summary-stats {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .stat-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-sm);
-            font-size: 0.8rem;
-            font-weight: 600;
-            font-family: var(--font-heading);
-        }
-
-        .stat-pass {
-            background: var(--cps-success-bg);
-            color: var(--cps-success-text);
-        }
-
-        .stat-fail {
-            background: var(--cps-danger-bg);
-            color: var(--cps-danger-text);
-        }
-
-        .stat-review {
-            background: var(--cps-warning-bg);
-            color: var(--cps-warning-text);
-        }
-
-        .result-item {
-            padding: 1.25rem;
-            border: 1px solid var(--cps-gray-border);
-            border-radius: var(--radius-md);
-            margin-bottom: 1rem;
-            background: var(--cps-white);
-            transition: box-shadow 0.3s ease;
-        }
-
-        .result-item:hover {
-            box-shadow: var(--shadow-sm);
-        }
-
-        .result-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.75rem;
-        }
-
-        .result-vendor {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--cps-blue);
-            font-family: var(--font-heading);
-        }
-
-        .result-url {
-            font-size: 0.8rem;
-            color: var(--cps-text-gray);
-            word-break: break-all;
-            margin-top: 0.25rem;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.35rem 0.75rem;
-            border-radius: var(--radius-sm);
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-family: var(--font-heading);
-        }
-
-        .status-pass {
-            background: var(--cps-success-bg);
-            color: var(--cps-success-text);
-        }
-
-        .status-fail {
-            background: var(--cps-danger-bg);
-            color: var(--cps-danger-text);
-        }
-
-        .status-review {
-            background: var(--cps-warning-bg);
-            color: var(--cps-warning-text);
-        }
-
-        .result-reason {
-            font-size: 0.85rem;
-            color: var(--cps-text-dark);
-            line-height: 1.6;
-        }
-
-        .result-categories {
-            margin-top: 0.75rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .category-tag {
-            font-size: 0.7rem;
-            padding: 0.25rem 0.65rem;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-family: var(--font-heading);
-        }
-
-        .cat-covered {
-            background: var(--cps-success-bg);
-            color: var(--cps-success-text);
-        }
-
-        .cat-excluded {
-            background: var(--cps-danger-bg);
-            color: var(--cps-danger-text);
-        }
-
-        .progress-container {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--cps-gray-border);
-            border-top-color: var(--cps-blue);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1.5rem;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .progress-text {
-            font-size: 0.9rem;
-            color: var(--cps-text-gray);
-            font-weight: 500;
-        }
-
-        footer {
-            text-align: center;
-            padding: 1.5rem;
-            color: var(--cps-text-gray);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--cps-gray-border);
-            background: var(--cps-white);
-            margin-top: auto;
-        }
-
-        @media (max-width: 600px) {
-            .header-container {
-                padding: 0 1rem;
-            }
-
-            .brand-name {
-                font-size: 1.1rem;
-            }
-
+        @media (max-width: 480px) {
             .card {
-                padding: 1.75rem;
+                padding: 30px 24px;
             }
 
             h1 {
-                font-size: 1.4rem;
+                font-size: 24px;
             }
 
-            .logo-svg {
-                height: 40px;
+            .instructions {
+                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-container">
-            <div class="logo-section">
-                <svg class="logo-svg" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <text x="0" y="42" font-family="Poppins, sans-serif" font-size="36" font-weight="700" fill="#0371c5">CPS</text>
-                    <text x="85" y="42" font-family="Poppins, sans-serif" font-size="28" font-weight="500" fill="#111111">Central</text>
-                </svg>
+    <div class="card">
+        <h1>CPS Vendor Validator</h1>
+        <p class="instructions">Upload a CSV of vendor domains to start validation.</p>
+        
+        <form method="post" enctype="multipart/form-data" action="https://pvd.pei.mybluehost.me/form/9c8d7e6f-5a4b-4c3d-8e2f-1a0b9c8d7e6f">
+            <div class="form-group">
+                <label for="domains_csv">CSV File</label>
+                <input type="file" id="domains_csv" name="domains_csv" accept=".csv" required>
             </div>
-            <div class="user-section">
-                <div class="user-avatar">A</div>
-                <div class="user-info">
-                    <span class="user-status">Logged in as</span>
-                    <span class="user-role">Admin</span>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <main>
-        <div class="card" id="uploadCard">
-            <h1>Validate Vendor Coverage</h1>
-            <p class="instructions">Upload a CSV file containing vendor domains to verify CPS coverage eligibility.</p>
             
-            <form id="validatorForm">
-                <div class="file-upload-wrapper">
-                    <label class="file-upload-label">CSV File</label>
-                    <div class="file-input-container" id="dropZone">
-                        <svg class="file-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM16 18H8V16H16V18ZM16 14H8V12H16V14ZM13 9V3.5L18.5 9H13Z"/>
-                        </svg>
-                        <p class="file-text" id="fileName">Drop CSV here or click to browse</p>
-                        <p class="file-hint">Columns: domain, website, URL, or vendor_name</p>
-                        <input type="file" id="csvFile" accept=".csv" />
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn-submit" id="submitBtn" disabled>
-                    Validate Vendors
-                </button>
-            </form>
-        </div>
-
-        <div class="card" id="progressCard" style="display: none;">
-            <div class="progress-container">
-                <div class="spinner"></div>
-                <p class="progress-text" id="progressText">Analyzing vendors... 0 / 0</p>
-            </div>
-        </div>
-
-        <div class="card" id="resultsCard" style="display: none;">
-            <div class="results-header">
-                <span class="results-title">Validation Results</span>
-                <div class="summary-stats" id="summaryStats"></div>
-            </div>
-            <div id="resultsList"></div>
-            <button class="btn-submit" onclick="resetValidator()" style="margin-top: 1rem;">
-                Validate Another File
-            </button>
-        </div>
-    </main>
-
-    <footer>
-        &copy; 2024 Consumer Priority Service. All rights reserved.
-    </footer>
-
-    <script>
-        const coveredRules = [
-            { keywords: ['electronics', 'electronic'], category: 'Electronics' },
-            { keywords: ['appliance', 'appliances'], category: 'Appliances' },
-            { keywords: ['tool', 'tools', 'power tool', 'power tools'], category: 'Tools' },
-            { keywords: ['firearm', 'firearms', 'gun', 'guns'], category: 'Firearms' },
-            { keywords: ['computer', 'computers', 'laptop', 'laptops', 'pc', 'desktop'], category: 'Computers' },
-            { keywords: ['phone', 'phones', 'smartphone', 'smartphones', 'mobile'], category: 'Mobile Devices' },
-            { keywords: ['camera', 'cameras', 'photography', 'video camera'], category: 'Cameras' },
-            { keywords: ['audio', 'speaker', 'speakers', 'headphone', 'headphones'], category: 'Audio Equipment' },
-            { keywords: ['tv', 'television', 'televisions', 'monitor', 'monitors'], category: 'Video Equipment' },
-            { keywords: ['hardware', 'machinery', 'equipment'], category: 'Hardware & Machinery' },
-            { keywords: ['durable', 'high-ticket', 'powered'], category: 'Durable Goods' },
-            { keywords: ['kitchen appliance', 'refrigerator', 'washer', 'dryer', 'oven', 'microwave'], category: 'Kitchen Appliances' },
-            { keywords: ['power', 'battery-powered', 'electric tool'], category: 'Powered Tools' }
-        ];
-
-        const excludedRules = [
-            { keywords: ['apparel', 'clothing', 'cloth', 'fashion', 'garment'], category: 'Apparel' },
-            { keywords: ['food', 'grocery', 'groceries', 'beverage', 'drink', 'snack'], category: 'Food & Beverage' },
-            { keywords: ['service', 'services', 'consulting', 'repair service'], category: 'Services' },
-            { keywords: ['consumable', 'consumables', 'disposable'], category: 'Consumables' },
-            { keywords: ['shoe', 'shoes', 'footwear', 'boot', 'boots'], category: 'Footwear' },
-            { keywords: ['beauty', 'cosmetic', 'cosmetics', 'skincare', 'makeup'], category: 'Beauty Products' },
-            { keywords: ['supplement', 'supplements', 'vitamin', 'vitamins'], category: 'Supplements' },
-            { keywords: ['furniture', 'sofa', 'chair', 'table', 'bed', 'mattress'], category: 'Furniture' },
-            { keywords: ['toy', 'toys', 'game', 'games'], category: 'Toys & Games' },
-            { keywords: ['book', 'books', 'magazine', 'magazines', 'media'], category: 'Media' },
-            { keywords: ['pet supply', 'pet food', 'pet toy'], category: 'Pet Supplies' },
-            { keywords: ['automotive part', 'car part', 'auto part'], category: 'Automotive Parts' },
-            { keywords: ['garden', 'plant', 'plants', 'seed', 'seeds'], category: 'Garden & Plants' }
-        ];
-
-        let selectedFile = null;
-
-        document.getElementById('csvFile').addEventListener('change', handleFileSelect);
-        document.getElementById('validatorForm').addEventListener('submit', handleSubmit);
-
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (file) {
-                selectedFile = file;
-                document.getElementById('fileName').textContent = file.name;
-                document.getElementById('dropZone').classList.add('has-file');
-                document.getElementById('submitBtn').disabled = false;
-            }
-        }
-
-        async function handleSubmit(e) {
-            e.preventDefault();
-            if (!selectedFile) return;
-
-            document.getElementById('uploadCard').style.display = 'none';
-            document.getElementById('progressCard').style.display = 'block';
-
-            try {
-                // Parse CSV client-side using PapaParse
-                const csvText = await selectedFile.text();
-                const parseResult = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-                
-                if (parseResult.errors.length > 0 && parseResult.data.length === 0) {
-                    throw new Error('Invalid CSV format: ' + parseResult.errors[0].message);
-                }
-
-                const domains = extractDomains(parseResult.data);
-                
-                if (domains.length === 0) {
-                    throw new Error('No valid domains found in CSV. Ensure columns include: domain, website, URL, or vendor_name');
-                }
-
-                // Process vendors client-side
-                const results = [];
-                for (let i = 0; i < domains.length; i++) {
-                    updateProgress(i + 1, domains.length);
-                    const result = await analyzeWebsite(domains[i]);
-                    results.push(result);
-                    
-                    // Add small delay to avoid overwhelming requests
-                    if (i < domains.length - 1) {
-                        await new Promise(resolve => setTimeout(resolve, 100));
-                    }
-                }
-
-                displayResults(results);
-            } catch (error) {
-                console.error('Processing error:', error);
-                alert('Error: ' + error.message);
-                resetValidator();
-            }
-        }
-
-        function extractDomains(data) {
-            const domainKeys = ['domain', 'Domain', 'website', 'Website', 'URL', 'url', 'Vendor Name', 'vendor_name', 'Name', 'vendor'];
-            const domains = [];
-            
-            data.forEach(row => {
-                for (const key of domainKeys) {
-                    if (row[key] && typeof row[key] === 'string') {
-                        let url = row[key].trim();
-                        if (url) {
-                            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                                url = 'https://' + url;
-                            }
-                            try {
-                                new URL(url);
-                                domains.push({ url, name: row['Vendor Name'] || row['vendor_name'] || row['Name'] || row['vendor'] || url });
-                                break;
-                            } catch (e) {}
-                        }
-                    }
-                }
-            });
-            return domains;
-        }
-
-        async function analyzeWebsite(domainObj) {
-            const { url, name } = domainObj;
-            try {
-                // Try multiple CORS proxies in order of preference
-                // Using 'get' endpoint which returns JSON with contents property
-                const proxies = [
-                    `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-                    `https://corsproxy.io/?${encodeURIComponent(url)}`,
-                    `https://thingproxy.freeboard.io/fetch/${url}`
-                ];
-                
-                let html = null;
-                let lastError = null;
-                
-                for (let i = 0; i < proxies.length; i++) {
-                    const proxyUrl = proxies[i];
-                    console.log(`Attempt ${i + 1}: Fetching ${url} via proxy: ${proxyUrl}`);
-                    
-                    try {
-                        const response = await fetch(proxyUrl, { 
-                            signal: AbortSignal.timeout(10000) // 10 second timeout
-                        });
-                        
-                        // Defensive check: verify response is OK
-                        if (!response.ok) {
-                            throw new Error(`Proxy returned HTTP ${response.status}`);
-                        }
-                        
-                        // Check Content-Type header
-                        const contentType = response.headers.get('content-type') || '';
-                        console.log(`Content-Type: ${contentType}`);
-                        
-                        // For allorigins.win (returns JSON)
-                        if (proxyUrl.includes('allorigins.win')) {
-                            if (!contentType.includes('application/json')) {
-                                const rawText = await response.text();
-                                console.warn(`AllOrigins returned non-JSON. Preview: ${rawText.substring(0, 200)}`);
-                                throw new Error(`AllOrigins returned unexpected content type: ${contentType}`);
-                            }
-                            
-                            const proxyData = await response.json();
-                            
-                            // Check if the proxy encountered an error
-                            if (proxyData.status && proxyData.status.http_code !== 200) {
-                                throw new Error(`Site unreachable (HTTP ${proxyData.status.http_code})`);
-                            }
-                            
-                            html = proxyData.contents || '';
-                        } 
-                        // For corsproxy.io and thingproxy (returns raw HTML)
-                        else {
-                            html = await response.text();
-                        }
-                        
-                        // Validate we got actual content
-                        if (html && html.trim().length > 0) {
-                            // Check if it's an error page
-                            const trimmedHtml = html.trim();
-                            const lowerHtml = html.toLowerCase();
-                            
-                            if (trimmedHtml.startsWith('<!DOCTYPE html>') || trimmedHtml.startsWith('<html') || trimmedHtml.startsWith('<HTML')) {
-                                if (lowerHtml.includes('404') || lowerHtml.includes('not found') || 
-                                    lowerHtml.includes('500') || lowerHtml.includes('internal server error') ||
-                                    lowerHtml.includes('522') || lowerHtml.includes('connection timed out') ||
-                                    lowerHtml.includes('503') || lowerHtml.includes('service unavailable')) {
-                                    throw new Error('Website returned error page');
-                                }
-                            }
-                            
-                            // Success - we have valid HTML content
-                            console.log(`Successfully fetched content from ${url} via proxy ${i + 1}`);
-                            break;
-                        } else {
-                            throw new Error('Website returned empty content');
-                        }
-                        
-                    } catch (proxyError) {
-                        lastError = proxyError;
-                        console.warn(`Proxy ${i + 1} failed for ${url}:`, proxyError.message);
-                        // Continue to next proxy
-                        if (i < proxies.length - 1) {
-                            continue;
-                        }
-                        // If this was the last proxy, throw the error
-                        throw lastError;
-                    }
-                }
-                
-                // Parse the HTML content
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                
-                // Check for parser errors (malformed HTML)
-                const parserError = doc.querySelector('parsererror');
-                if (parserError) {
-                    console.warn('HTML parsing warning for:', url);
-                }
-                
-                const title = doc.querySelector('title')?.innerText || '';
-                const metaDesc = doc.querySelector('meta[name="description"]')?.content || '';
-                const metaKeywords = doc.querySelector('meta[name="keywords"]')?.content || '';
-                const h1 = Array.from(doc.querySelectorAll('h1')).map(h => h.innerText).join(' ');
-                const nav = doc.querySelector('nav')?.innerText || '';
-                const main = doc.querySelector('main')?.innerText || '';
-                const content = doc.querySelector('.content')?.innerText || '';
-                
-                const text = `${title} ${metaDesc} ${metaKeywords} ${h1} ${nav} ${main} ${content}`.substring(0, 8000).toLowerCase();
-                
-                const coveredMatches = [];
-                const excludedMatches = [];
-                
-                coveredRules.forEach(({ keywords, category }) => {
-                    if (keywords.some(k => text.includes(k))) coveredMatches.push(category);
-                });
-                
-                excludedRules.forEach(({ keywords, category }) => {
-                    if (keywords.some(k => text.includes(k))) excludedMatches.push(category);
-                });
-                
-                let status = 'review';
-                let reason = 'Unclear product mix or insufficient data.';
-                
-                if (coveredMatches.length > 0 && excludedMatches.length === 0) {
-                    status = 'pass';
-                    reason = `Verified: ${[...new Set(coveredMatches)].join(', ')}.`;
-                } else if (excludedMatches.length > 0 && coveredMatches.length === 0) {
-                    status = 'fail';
-                    reason = `Excluded: ${[...new Set(excludedMatches)].join(', ')}.`;
-                } else if (coveredMatches.length > 0 && excludedMatches.length > 0) {
-                    status = 'review';
-                    reason = `Mixed inventory: ${[...new Set(coveredMatches)].join(', ')} AND ${[...new Set(excludedMatches)].join(', ')}.`;
-                } else if (text.length < 50) {
-                    status = 'review';
-                    reason = 'Website content too sparse to determine coverage.';
-                }
-                
-                return { 
-                    name,
-                    url, 
-                    status, 
-                    reason, 
-                    covered: [...new Set(coveredMatches)], 
-                    excluded: [...new Set(excludedMatches)] 
-                };
-            } catch (error) {
-                console.error(`Analysis failed for ${name} (${url}):`, error.message);
-                return { 
-                    name,
-                    url, 
-                    status: 'review', 
-                    reason: `Error: ${error.message}. Manual review required.`, 
-                    covered: [], 
-                    excluded: [] 
-                };
-            }
-        }
-
-        function updateProgress(current, total) {
-            document.getElementById('progressText').textContent = `Analyzing vendors... ${current} / ${total}`;
-        }
-
-        function displayResults(results) {
-            document.getElementById('progressCard').style.display = 'none';
-            document.getElementById('resultsCard').style.display = 'block';
-
-            // Handle both backend (verdict) and frontend (status) response formats
-            const normalizedResults = results.map(r => ({
-                name: r.name || r.domain,
-                url: r.url || r.domain,
-                status: (r.status || r.verdict || 'review').toLowerCase(),
-                reason: r.reason || 'No reason provided',
-                covered: r.covered || [],
-                excluded: r.excluded || []
-            }));
-
-            const passCount = normalizedResults.filter(r => r.status === 'pass').length;
-            const failCount = normalizedResults.filter(r => r.status === 'fail').length;
-            const reviewCount = normalizedResults.filter(r => r.status === 'mixed' || r.status === 'review').length;
-
-            document.getElementById('summaryStats').innerHTML = `
-                <span class="stat-badge stat-pass">✓ ${passCount} Pass</span>
-                <span class="stat-badge stat-fail">✕ ${failCount} Fail</span>
-                <span class="stat-badge stat-review">! ${reviewCount} Review</span>
-            `;
-
-            const resultsList = document.getElementById('resultsList');
-            resultsList.innerHTML = normalizedResults.map(r => `
-                <div class="result-item">
-                    <div class="result-header">
-                        <div>
-                            <div class="result-vendor">${escapeHtml(r.name)}</div>
-                            <div class="result-url">${escapeHtml(r.url)}</div>
-                        </div>
-                        <span class="status-badge status-${r.status === 'mixed' ? 'review' : r.status}">
-                            ${r.status === 'pass' ? '✓' : r.status === 'fail' ? '✕' : '!'} ${r.status === 'mixed' ? 'Review' : r.status}
-                        </span>
-                    </div>
-                    <div class="result-reason">${escapeHtml(r.reason)}</div>
-                    ${r.covered.length > 0 || r.excluded.length > 0 ? `
-                        <div class="result-categories">
-                            ${r.covered.map(c => `<span class="category-tag cat-covered">✓ ${c}</span>`).join('')}
-                            ${r.excluded.map(c => `<span class="category-tag cat-excluded">✕ ${c}</span>`).join('')}
-                        </div>
-                    ` : ''}
-                </div>
-            `).join('');
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function resetValidator() {
-            selectedFile = null;
-            document.getElementById('csvFile').value = '';
-            document.getElementById('fileName').textContent = 'Drop CSV here or click to browse';
-            document.getElementById('dropZone').classList.remove('has-file');
-            document.getElementById('submitBtn').disabled = true;
-            document.getElementById('uploadCard').style.display = 'block';
-            document.getElementById('resultsCard').style.display = 'none';
-            document.getElementById('progressCard').style.display = 'none';
-        }
-    </script>
+            <button type="submit" class="btn-submit">Start Validation</button>
+        </form>
+    </div>
 </body>
 </html>
