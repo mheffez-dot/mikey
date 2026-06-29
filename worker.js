@@ -167,6 +167,8 @@ async function validateDomain(domain, env) {
         evidence: [],
         reason: `Website unreachable (status: ${statusCode}). Manual review required.`,
         extracted: { title: '', description: '', products: [] },
+        covered: [],
+        excluded: []
       };
     }
 
@@ -176,6 +178,10 @@ async function validateDomain(domain, env) {
     // Use DeepSeek AI to classify
     const classification = await classifyWithAI(extracted, domain, env);
 
+    // Map verdict to covered/excluded arrays for frontend display
+    const covered = classification.verdict === 'Pass' ? [classification.category] : [];
+    const excluded = classification.verdict === 'Fail' ? [classification.category] : [];
+
     // Step 3: Return Verdict
     return {
       domain,
@@ -184,6 +190,8 @@ async function validateDomain(domain, env) {
       category: classification.category,
       evidence: classification.evidence,
       reason: classification.reason,
+      covered,
+      excluded,
       extracted: {
         title: extracted.title,
         description: extracted.description,
@@ -198,6 +206,8 @@ async function validateDomain(domain, env) {
       category: 'Error',
       evidence: [],
       reason: `Failed to validate: ${error.message}. Manual review required.`,
+      covered: [],
+      excluded: [],
       extracted: { title: '', description: '', products: [] },
     };
   }

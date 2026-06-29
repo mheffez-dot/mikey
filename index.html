@@ -1092,9 +1092,19 @@
             document.getElementById('progressCard').style.display = 'none';
             document.getElementById('resultsCard').style.display = 'block';
 
-            const passCount = results.filter(r => r.status === 'pass').length;
-            const failCount = results.filter(r => r.status === 'fail').length;
-            const reviewCount = results.filter(r => r.status === 'review').length;
+            // Handle both backend (verdict) and frontend (status) response formats
+            const normalizedResults = results.map(r => ({
+                name: r.name || r.domain,
+                url: r.url || r.domain,
+                status: (r.status || r.verdict || 'review').toLowerCase(),
+                reason: r.reason || 'No reason provided',
+                covered: r.covered || [],
+                excluded: r.excluded || []
+            }));
+
+            const passCount = normalizedResults.filter(r => r.status === 'pass').length;
+            const failCount = normalizedResults.filter(r => r.status === 'fail').length;
+            const reviewCount = normalizedResults.filter(r => r.status === 'mixed' || r.status === 'review').length;
 
             document.getElementById('summaryStats').innerHTML = `
                 <span class="stat-badge stat-pass">✓ ${passCount} Pass</span>
@@ -1103,15 +1113,15 @@
             `;
 
             const resultsList = document.getElementById('resultsList');
-            resultsList.innerHTML = results.map(r => `
+            resultsList.innerHTML = normalizedResults.map(r => `
                 <div class="result-item">
                     <div class="result-header">
                         <div>
                             <div class="result-vendor">${escapeHtml(r.name)}</div>
                             <div class="result-url">${escapeHtml(r.url)}</div>
                         </div>
-                        <span class="status-badge status-${r.status}">
-                            ${r.status === 'pass' ? '✓' : r.status === 'fail' ? '✕' : '!'} ${r.status}
+                        <span class="status-badge status-${r.status === 'mixed' ? 'review' : r.status}">
+                            ${r.status === 'pass' ? '✓' : r.status === 'fail' ? '✕' : '!'} ${r.status === 'mixed' ? 'Review' : r.status}
                         </span>
                     </div>
                     <div class="result-reason">${escapeHtml(r.reason)}</div>
